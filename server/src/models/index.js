@@ -11,37 +11,37 @@ const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
-	sequelize = new Sequelize(process.env[config.use_env_variable], config);
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
-	sequelize = new Sequelize(
-		config.database,
-		config.username,
-		config.password,
-		config
-	);
+  sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    config
+  );
 }
 
 fs.readdirSync(__dirname)
-	.filter((file) => {
-		return (
-			file.indexOf(".") !== 0 &&
-			file !== basename &&
-			file.slice(-3) === ".js" &&
-			file.indexOf(".test.js") === -1
-		);
-	})
-	.forEach((file) => {
-		const model = require(path.join(__dirname, file))(
-			sequelize,
-			Sequelize.DataTypes
-		);
-		db[model.name] = model;
-	});
+  .filter((file) => {
+    return (
+      file.indexOf(".") !== 0 &&
+      file !== basename &&
+      file.slice(-3) === ".js" &&
+      file.indexOf(".test.js") === -1
+    );
+  })
+  .forEach((file) => {
+    const model = require(path.join(__dirname, file))(
+      sequelize,
+      Sequelize.DataTypes
+    );
+    db[model.name] = model;
+  });
 
 Object.keys(db).forEach((modelName) => {
-	if (db[modelName].associate) {
-		db[modelName].associate(db);
-	}
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
 });
 
 db.sequelize = sequelize;
@@ -53,5 +53,18 @@ db.Category = require("./category")(sequelize, Sequelize);
 db.Menu = require("./menu")(sequelize, Sequelize);
 db.Order = require("./order")(sequelize, Sequelize);
 db.OrderDetail = require("./orderDetail")(sequelize, Sequelize);
+
+db.Order.belongsTo(db.User, {
+  foreignKey: "user_id",
+});
+db.Menu.belongsTo(db.Category, {
+  foreignKey: "category_id",
+});
+db.Order.hasMany(db.OrderDetail, {
+  foreignKey: "order_id",
+});
+db.Menu.hasMany(db.OrderDetail, {
+  foreignKey: "menu_id",
+});
 
 module.exports = db;
