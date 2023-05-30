@@ -8,10 +8,10 @@ app.use(cors());
 app.use(express.json());
 const router = require("./routes");
 const db = require("./models");
-db.sequelize.sync({ alter: true });
+// db.sequelize.sync({ alter: true });
 
 app.use("/users", router.userRouter);
 
 app.listen(PORT, () => {
-  console.log(`server is running on PORT ${PORT}`);
+	console.log(`server is running on PORT ${PORT}`);
 });
