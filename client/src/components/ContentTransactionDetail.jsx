@@ -29,7 +29,10 @@ export default function ContentFlexansactionDetail() {
       w={"100%"}
       h={"834px"}
       bgColor={"#F1F1F1"}
-      paddingTop={"112px"}
+      paddingTop={"60px"}
+      top={"0px"}
+      zIndex={"-1"}
+      position={"absolute"}
     >
       <Flex
         w={"100%"}

@@ -140,11 +140,19 @@ export default function ContentCashier() {
 
   return (
     <>
-      <Box maxW={"1194px"} w={"100%"} h={"834px"} bgColor={"#F1F1F1"}>
+      <Box
+        maxW={"1194px"}
+        w={"100%"}
+        h={"834px"}
+        bgColor={"#F1F1F1"}
+        top={0}
+        zIndex={-1}
+        position={"absolute"}
+      >
         <Box
           w={"100%"}
           h={"236px"}
-          paddingTop={"137px"}
+          paddingTop={"84px"}
           paddingLeft={"24px"}
           paddingBottom={"59px"}
         >
