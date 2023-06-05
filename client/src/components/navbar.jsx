@@ -9,7 +9,7 @@ export default function Navbar() {
   return (
     <Box>
       <Flex
-        fontFamily="Nunito Sans"
+        fontFamily="roboto"
         fontStyle="normal"
         fontWeight="700"
         lineHeight="41px"
@@ -56,7 +56,7 @@ export default function Navbar() {
           </Box>
         </Box>
       </Flex>
-      <Box top={"60px"} zIndex={"1"}>
+      <Box top={"60px"} zIndex={"2"}>
         {side ? <Sidebar /> : null}
       </Box>
     </Box>
