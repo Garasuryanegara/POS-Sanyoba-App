@@ -11,8 +11,8 @@ export default function MainAdmin() {
         left={"224px"}
         top={"0px"}
         background={"#FFFFFF"}
-        // flexWrap={"wrap"}
-        boxSizing="border-box"
+        // width={"1216px"}
+        // width={"100%"}
       >
         <ProfileAdmin></ProfileAdmin>
       </Box>

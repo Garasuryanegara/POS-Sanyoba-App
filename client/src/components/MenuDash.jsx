@@ -1,8 +1,50 @@
 import { Box, Flex, Input, Select, Icon, Text } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { GoArrowUp } from "react-icons/go";
 import { MdKeyboardArrowRight } from "react-icons/md";
+import moment from "moment";
+import axios from "axios";
 
 export default function MenuDash() {
+  const [data, setData] = useState();
+  const [sumOrder, setSumOrder] = useState();
+  const [countOrder, setCountOrder] = useState();
+  const [countDetails, setCountDetails] = useState();
+  const [date, setDate] = useState();
+
+  const handleChange = (e) => {
+    setDate(e.target.value);
+    console.log(date);
+  };
+
+  async function fetch1() {
+    const data1 = await axios.get("http://localhost:2000/orders", {
+      params: {
+        time1: date,
+        time2: date,
+      },
+    });
+    const data2 = await axios.get("http://localhost:2000/orderDetails", {
+      params: {
+        time1: date,
+        time2: date,
+      },
+    });
+    setData(data1.data);
+    setCountDetails(data2.data);
+    // console.log(data);
+    setSumOrder(data1.data.sum);
+    setCountOrder(data1.data.count);
+  }
+
+  // useEffect(() => {
+  //   console.log(data);
+  // }, []);
+
+  useEffect(() => {
+    fetch1();
+  }, [date]);
+
   return (
     <>
       <Flex
@@ -31,7 +73,8 @@ export default function MenuDash() {
             height={"40px"}
             bgColor={"#ffff"}
             type="date"
-            defaultValue={"2022-02-02"}
+            defaultValue={moment().format("YYYY-MM-DD")}
+            onChange={handleChange}
           ></Input>
         </Flex>
       </Flex>
@@ -41,7 +84,7 @@ export default function MenuDash() {
         flexWrap={"wrap"}
         gap={"16px"}
       >
-        <Flex
+        {/* <Flex
           width={"274px"}
           height={"103px"}
           background={"#ffff"}
@@ -75,7 +118,7 @@ export default function MenuDash() {
             </Flex>
             Compare to yesterday
           </Flex>
-        </Flex>
+        </Flex> */}
         <Flex
           width={"274px"}
           height={"103px"}
@@ -83,7 +126,6 @@ export default function MenuDash() {
           borderRadius={"8px"}
           boxShadow={"0px 1px 3px rgba(0, 0, 0, 0.1)"}
           flexDir={"column"}
-          // justifyContent={"space-evenly"}
           padding={"8px 16px"}
         >
           <Flex
@@ -96,7 +138,7 @@ export default function MenuDash() {
             Total Sales <Icon as={MdKeyboardArrowRight} />
           </Flex>
           <Box height={"30%"} fontWeight={"600"} fontSize={"16px"}>
-            Rp 3.730.000
+            {sumOrder ? `Rp  ${sumOrder?.toLocaleString("id-ID")}` : "-"}
           </Box>
           <Flex
             height={"30%"}
@@ -106,7 +148,9 @@ export default function MenuDash() {
             alignItems={"center"}
           >
             <Flex color={"#56D77A"} alignItems={"center"}>
-              <Icon height={"18px"} as={GoArrowUp}></Icon>140.53%
+              <Icon height={"18px"} as={GoArrowUp}></Icon>
+              {data?.percentSum ? `${data?.percentSum}%` : ""}
+              {/* 140.53% */}
             </Flex>
             Compare to yesterday
           </Flex>
@@ -118,7 +162,6 @@ export default function MenuDash() {
           borderRadius={"8px"}
           boxShadow={"0px 1px 3px rgba(0, 0, 0, 0.1)"}
           flexDir={"column"}
-          // justifyContent={"space-evenly"}
           padding={"8px 16px"}
         >
           <Flex
@@ -131,7 +174,7 @@ export default function MenuDash() {
             Total Transaction <Icon as={MdKeyboardArrowRight} />
           </Flex>
           <Box height={"30%"} fontWeight={"600"} fontSize={"16px"}>
-            40
+            {countOrder ? `${countOrder}` : "-"}
           </Box>
           <Flex
             height={"30%"}
@@ -141,7 +184,9 @@ export default function MenuDash() {
             alignItems={"center"}
           >
             <Flex color={"#56D77A"} alignItems={"center"}>
-              <Icon height={"18px"} as={GoArrowUp}></Icon>50.00%
+              <Icon height={"18px"} as={GoArrowUp}></Icon>
+              {data?.percentCount ? `${data?.percentCount}%` : ""}
+              {/* 50.00% */}
             </Flex>
             Compare to yesterday
           </Flex>
@@ -153,7 +198,6 @@ export default function MenuDash() {
           borderRadius={"8px"}
           boxShadow={"0px 1px 3px rgba(0, 0, 0, 0.1)"}
           flexDir={"column"}
-          // justifyContent={"space-evenly"}
           padding={"8px 16px"}
         >
           <Flex
@@ -166,7 +210,7 @@ export default function MenuDash() {
             Total Product <Icon as={MdKeyboardArrowRight} />
           </Flex>
           <Box height={"30%"} fontWeight={"600"} fontSize={"16px"}>
-            139
+            {countDetails?.sum ? `${countDetails?.sum}` : "-"}
           </Box>
           <Flex
             height={"30%"}
@@ -176,7 +220,8 @@ export default function MenuDash() {
             alignItems={"center"}
           >
             <Flex color={"#56D77A"} alignItems={"center"}>
-              <Icon height={"18px"} as={GoArrowUp}></Icon>143.86%
+              <Icon height={"18px"} as={GoArrowUp}></Icon>
+              {countDetails?.percentSum ? `${countDetails?.percentSum}%` : ""}
             </Flex>
             Compare to yesterday
           </Flex>

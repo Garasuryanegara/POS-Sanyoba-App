@@ -5,5 +5,5 @@ const orderDetailsControllers =
 
 router.post("/", orderDetailsControllers.insert);
 router.get("/", orderDetailsControllers.getByDate);
-// router.get("/table", orderDetailsControllers.getTable);
+router.get("/table", orderDetailsControllers.getTable);
 module.exports = router;

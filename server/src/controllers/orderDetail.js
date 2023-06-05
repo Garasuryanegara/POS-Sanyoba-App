@@ -25,8 +25,8 @@ const orderDetailsControllers = {
         where: {
           createdAt: {
             [Op.between]: [
-              moment(time1 ? time1 : moment()).format(),
-              moment(time2 ? time2 : moment())
+              moment(time1 ? time1 : moment("00:00:00", "hh:mm:ss")).format(),
+              moment(time2 ? time2 : moment("00:00:00", "hh:mm:ss"))
                 .add(1, "days")
                 .format(),
             ],
@@ -37,8 +37,8 @@ const orderDetailsControllers = {
         where: {
           createdAt: {
             [Op.between]: [
-              moment(time1 ? time1 : moment()).format(),
-              moment(time2 ? time2 : moment())
+              moment(time1 ? time1 : moment("00:00:00", "hh:mm:ss")).format(),
+              moment(time2 ? time2 : moment("00:00:00", "hh:mm:ss"))
                 .add(1, "days")
                 .format(),
             ],
@@ -70,62 +70,67 @@ const orderDetailsControllers = {
       });
     }
   },
-  // getTable: async (req, res) => {
-  //   try {
-  //     const {
-  //       time1,
-  //       time2,
-  //       limit,
-  //       offset,
-  //       column,
-  //       direction,
-  //       category_id,
-  //       search,
-  //     } = req.query;
-  //     let totalPages;
-  //     const Clause = {
-  //       createdAt: {
-  //         [Op.between]: [
-  //           moment(time1 ? time1 : moment()).format(),
-  //           moment(time2 ? time2 : moment())
-  //             .add(1, "days")
-  //             .format(),
-  //         ],
-  //       },
-  //     };
-  //     if (category_id) {
-  //       Clause.category_id = category_id;
-  //     }
-  //     if (search) {
-  //       Clause["$Menu.name$"] = {
-  //         [Op.like]: `%${search}%`,
-  //       };
-  //     }
-  //     if (limit) {
-  //       const totalCount = await db.OrderDetail.count({ where: Clause });
-  //       totalPages = Math.ceil(totalCount / limit);
-  //     }
-  //     const details = await db.OrderDetail.findAll({
-  //       include: [
-  //         {
-  //           model: db.Menu,
-  //         },
-  //       ],
-  //       where: Clause,
-  //       order: [[column, direction]],
-  //       limit: limit ? Number(limit) : null,
-  //       offset: offset ? Number(offset) : null,
-  //     });
-  //     res.send({
-  //       details: details,
-  //       totalPages: totalPages,
-  //     });
-  //   } catch (err) {
-  //     console.log(err);
-  //     res.status(500).send({
-  //       message: err.message,
-  //     });
-  //   }
-  // },
+  getTable: async (req, res) => {
+    try {
+      const { time1, time2, limit, offset, column, sort, category_id, search } =
+        req.query;
+      let totalPages;
+      let orderClause;
+      const Clause = {
+        createdAt: {
+          [Op.between]: [
+            moment(time1 ? time1 : moment("00:00:00", "hh:mm:ss")).format(),
+            moment(time2 ? time2 : moment("00:00:00", "hh:mm:ss"))
+              .add(1, "days")
+              .format(),
+          ],
+        },
+      };
+      if (category_id) {
+        Clause.category_id = category_id;
+      }
+      if (search) {
+        Clause["$Menu.name$"] = {
+          [Op.like]: `%${search}%`,
+        };
+      }
+      if (column === "name") {
+        orderClause = [[db.Menu, column, sort]];
+      } else if (column) {
+        orderClause = [[column, sort]];
+      }
+      if (limit) {
+        const totalCount = await db.OrderDetail.count({
+          include: [
+            {
+              model: db.Menu,
+            },
+          ],
+          where: Clause,
+        });
+        totalPages = Math.ceil(totalCount / limit);
+      }
+      const details = await db.OrderDetail.findAll({
+        include: [
+          {
+            model: db.Menu,
+          },
+        ],
+        where: Clause,
+        order: orderClause,
+        limit: limit ? Number(limit) : null,
+        offset: offset ? Number(offset) : null,
+      });
+      res.send({
+        details: details,
+        totalPages: totalPages,
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
 };
 module.exports = orderDetailsControllers;
