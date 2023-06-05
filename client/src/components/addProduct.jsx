@@ -10,7 +10,7 @@ import {
 	Switch,
 } from "@chakra-ui/react";
 import { HiOutlineUpload } from "react-icons/hi";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { api } from "../api/api";
@@ -18,6 +18,65 @@ import { api } from "../api/api";
 export default function AddProduct() {
 	const inputFileRef = useRef(null);
 	const [selectedFile, setSelectedFile] = useState(null);
+	const nav = useNavigate();
+	let menu;
+
+	useEffect(() => {
+		categoryId();
+	}, []);
+
+	const [categoryList, setCategoryList] = useState([]);
+
+	const categoryId = async () => {
+		await api.get("/categories", categoryList).then((res) => {
+			setCategoryList(res.data);
+		});
+	};
+
+	const formik = useFormik({
+		initialValues: {
+			name: "",
+			desc: "",
+			prc: "",
+			category_id: "",
+		},
+		onSubmit: async () => {
+			const { name, desc, prc, category_id } = formik.values;
+			const product = {
+				name,
+				desc,
+				prc,
+				category_id,
+			};
+			const checkProduct = await api
+				.get("/menus/Draft", {
+					params: {
+						nameCat: product.name,
+						category_id: product.category_id,
+					},
+				})
+				.then((res) => {
+					if (res.data.length) {
+						return true;
+					} else {
+						return false;
+					}
+				});
+			if (checkProduct) {
+				return alert("product already exist");
+			} else {
+				await api.post("/menus/", product).then((res) => {
+					alert("product added");
+					nav("/product");
+				});
+			}
+		},
+	});
+
+	async function inputHandler(event) {
+		const { value, id } = event.target;
+		formik.setFieldValue(id, value);
+	}
 
 	const handleFile = (event) => {
 		setSelectedFile(event.target.files[0]);
@@ -42,6 +101,7 @@ export default function AddProduct() {
 				fontSize={"12px"}
 				lineHeight={"14px"}
 				color={"#353535"}
+				background={"#ffff"}
 			>
 				<Flex id="productInfo">Product Information</Flex>
 
@@ -88,6 +148,8 @@ export default function AddProduct() {
 						placeholder="e.g. Chocolate Truffle Cake"
 						h={"32px"}
 						w={"423px"}
+						id="name"
+						onChange={inputHandler}
 					></Input>
 				</Flex>
 				{/* product desc */}
@@ -105,6 +167,8 @@ export default function AddProduct() {
 						placeholder="e.g. Best Seller"
 						h={"107px"}
 						w={"423px"}
+						id="desc"
+						onChange={inputHandler}
 					></Input>
 				</Flex>
 				{/* price */}
@@ -145,6 +209,8 @@ export default function AddProduct() {
 								placeholder="e.g. Rp 30.000"
 								h={"32px"}
 								w={"269.33px"}
+								id="price"
+								onChange={inputHandler}
 							></Input>
 						</Flex>
 						<Flex
@@ -210,12 +276,30 @@ export default function AddProduct() {
 						flex={"none"}
 						flexGrow={"0"}
 					>
-						<Input
-							className="input"
-							placeholder="e.g. Cake"
-							w={"423px"}
+						<Select
+							fontStyle={"normal"}
+							fontWeight={"500"}
+							fontSize={"12px"}
+							lineHeight={"14px"}
+							className="select"
+							boxSizing="border-box"
+							display={"flex"}
+							flexDir={"row"}
+							justifyContent={"space-between"}
+							alignItems={"center"}
+							gap={"202px"}
 							h={"32px"}
-						></Input>
+							w={"423px"}
+							borderRadius={"8px"}
+							placeholder="Choose category"
+							id="category_id"
+							onChange={inputHandler}
+						>
+							{categoryList.map((val) => (
+								<option value={val.id}>{val.category}</option>
+							))}
+						</Select>
+
 						<Button
 							display={"flex"}
 							flexDir={"row"}
@@ -500,6 +584,7 @@ export default function AddProduct() {
 							lineHeight={"14px"}
 							color={"white"}
 							bgColor={"#369A64"}
+							onClick={formik.handleSubmit}
 						>
 							Add Product
 						</Button>

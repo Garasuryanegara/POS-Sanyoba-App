@@ -21,11 +21,14 @@ import {
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { RxMagnifyingGlass } from "react-icons/rx";
 import kue from "../assets/kue.jpg";
+import { useState } from "react";
 
 export default function Product() {
+	const [menu, setMenu] = useState([]);
 	return (
 		<>
 			<Box
+				background={"#FFFFFF"}
 				display={"flex"}
 				flexDir={"column"}
 				alignItems={"flex-start"}
@@ -304,112 +307,140 @@ export default function Product() {
 							<Flex w={"16px"} h={"48px"}></Flex>
 						</Flex>
 						{/* map */}
-						<Flex
-							flexDir={"row"}
-							justifyContent={"center"}
-							alignItems={"center"}
-							padding={"0px 16px"}
-							gap={"24px"}
-							w={"1168px"}
-							h={"46px"}
-							borderBottom={"1px solid rgba(53, 53, 53, 0.1)"}
-						>
-							<Flex
-								flexDir={"row"}
-								justifyContent={"space-between"}
-								alignItems={"center"}
-								padding={"8px 0px"}
-								gap={"8px"}
-								w={"162.67px"}
-								h={"46px"}
-							>
-								<Flex gap={"8px"} alignItems={"center"}>
-									<Checkbox />
-									<Image
-										src={kue}
-										w={"24px"}
-										h={"24px"}
-										borderRadius={"4px"}
-									/>
-									<Text>Carrot Cake</Text>
-								</Flex>
-							</Flex>
-							<Flex
-								flexDir={"row"}
-								justifyContent={"space-between"}
-								alignItems={"center"}
-								gap={"8px"}
-								w={"162.67px"}
-								h={"46px"}
-							>
-								<Flex gap={"5px"} alignItems={"center"}>
-									<Text>Defuze Mega Mall</Text>
-								</Flex>
-							</Flex>
-							<Flex
-								flexDir={"row"}
-								justifyContent={"space-between"}
-								alignItems={"center"}
-								gap={"8px"}
-								w={"162.67px"}
-								h={"46px"}
-							>
-								<Flex gap={"5px"} alignItems={"center"}>
-									<Text>CAK021</Text>
-								</Flex>
-							</Flex>
-							<Flex
-								flexDir={"row"}
-								justifyContent={"space-between"}
-								alignItems={"center"}
-								gap={"8px"}
-								w={"162.67px"}
-								h={"46px"}
-							>
-								<Flex gap={"5px"} alignItems={"center"}>
-									<Text>Cake</Text>
-								</Flex>
-							</Flex>
-							<Flex
-								flexDir={"row"}
-								justifyContent={"space-between"}
-								alignItems={"center"}
-								gap={"8px"}
-								w={"162.67px"}
-								h={"46px"}
-							>
-								<Flex gap={"5px"} alignItems={"center"}>
-									<Text>Rp 35.000</Text>
-								</Flex>
-							</Flex>
-							<Flex
-								flexDir={"row"}
-								justifyContent={"space-between"}
-								alignItems={"center"}
-								gap={"8px"}
-								w={"162.67px"}
-								h={"46px"}
-							>
-								<Flex gap={"5px"} alignItems={"center"}>
-									<Text
-										color={"#45BB71"}
-										fontFamily={"Roboto"}
-										fontStyle={"normal"}
-										fontWeight={"500"}
-										fontSize={"12px"}
-										lineHeight={"14px"}
-									>
-										Published
-									</Text>
-								</Flex>
-							</Flex>
-							<Icon
-								as={BiDotsHorizontalRounded}
-								w={"16px"}
-								h={"48px"}
-								cursor={"pointer"}
-							></Icon>
-						</Flex>
+						{menu.data?.length
+							? menu?.data.map((val) => {
+									return (
+										<Flex
+											flexDir={"row"}
+											justifyContent={"center"}
+											alignItems={"center"}
+											padding={"0px 16px"}
+											gap={"24px"}
+											w={"1168px"}
+											h={"46px"}
+											borderBottom={
+												"1px solid rgba(53, 53, 53, 0.1)"
+											}
+										>
+											<Flex
+												flexDir={"row"}
+												justifyContent={"space-between"}
+												alignItems={"center"}
+												padding={"8px 0px"}
+												gap={"8px"}
+												w={"162.67px"}
+												h={"46px"}
+											>
+												<Flex
+													gap={"8px"}
+													alignItems={"center"}
+												>
+													<Checkbox />
+													<Image
+														src={kue}
+														w={"24px"}
+														h={"24px"}
+														borderRadius={"4px"}
+													/>
+													<Text>Carrot Cake</Text>
+												</Flex>
+											</Flex>
+											<Flex
+												flexDir={"row"}
+												justifyContent={"space-between"}
+												alignItems={"center"}
+												gap={"8px"}
+												w={"162.67px"}
+												h={"46px"}
+											>
+												<Flex
+													gap={"5px"}
+													alignItems={"center"}
+												>
+													<Text>
+														Defuze Mega Mall
+													</Text>
+												</Flex>
+											</Flex>
+											<Flex
+												flexDir={"row"}
+												justifyContent={"space-between"}
+												alignItems={"center"}
+												gap={"8px"}
+												w={"162.67px"}
+												h={"46px"}
+											>
+												<Flex
+													gap={"5px"}
+													alignItems={"center"}
+												>
+													<Text>CAK021</Text>
+												</Flex>
+											</Flex>
+											<Flex
+												flexDir={"row"}
+												justifyContent={"space-between"}
+												alignItems={"center"}
+												gap={"8px"}
+												w={"162.67px"}
+												h={"46px"}
+											>
+												<Flex
+													gap={"5px"}
+													alignItems={"center"}
+												>
+													<Text>Cake</Text>
+												</Flex>
+											</Flex>
+											<Flex
+												flexDir={"row"}
+												justifyContent={"space-between"}
+												alignItems={"center"}
+												gap={"8px"}
+												w={"162.67px"}
+												h={"46px"}
+											>
+												<Flex
+													gap={"5px"}
+													alignItems={"center"}
+												>
+													<Text>Rp 35.000</Text>
+												</Flex>
+											</Flex>
+											<Flex
+												flexDir={"row"}
+												justifyContent={"space-between"}
+												alignItems={"center"}
+												gap={"8px"}
+												w={"162.67px"}
+												h={"46px"}
+											>
+												<Flex
+													gap={"5px"}
+													alignItems={"center"}
+												>
+													<Text
+														color={"#45BB71"}
+														fontFamily={"Roboto"}
+														fontStyle={"normal"}
+														fontWeight={"500"}
+														fontSize={"12px"}
+														lineHeight={"14px"}
+													>
+														Published
+													</Text>
+												</Flex>
+											</Flex>
+											<Icon
+												as={BiDotsHorizontalRounded}
+												w={"16px"}
+												h={"48px"}
+												cursor={"pointer"}
+											></Icon>
+										</Flex>
+									);
+							  })
+							: null}
 					</Flex>
 					{/* pagination */}
 					<Flex

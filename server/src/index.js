@@ -17,5 +17,5 @@ app.use("/menus", router.menuRouter);
 app.use("/categories", router.categoryRouter);
 
 app.listen(PORT, () => {
-  console.log(`server is running on PORT ${PORT}`);
+	console.log(`server is running on PORT ${PORT}`);
 });
