@@ -43,7 +43,7 @@ const menuControllers = {
   },
   getMenuDraft: async (req, res) => {
     try {
-      const { limit, offset, column, direction, category, search } = req.query;
+      const { limit, offset, column, sort, category, search } = req.query;
       const whereClause = {};
       let totalPages;
       let orderClause;
@@ -56,9 +56,9 @@ const menuControllers = {
         };
       }
       if (column === "category") {
-        orderClause = [[db.Category, column, direction]];
+        orderClause = [[db.Category, column, sort]];
       } else if (column) {
-        orderClause = [[column, direction]];
+        orderClause = [[column, sort]];
       }
       if (limit) {
         const totalCount = await db.Menu.count({
