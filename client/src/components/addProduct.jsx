@@ -37,15 +37,15 @@ export default function AddProduct() {
 		initialValues: {
 			name: "",
 			desc: "",
-			prc: "",
+			price: "",
 			category_id: "",
 		},
 		onSubmit: async () => {
-			const { name, desc, prc, category_id } = formik.values;
+			const { name, desc, price, category_id } = formik.values;
 			const product = {
 				name,
 				desc,
-				prc,
+				price,
 				category_id,
 			};
 			const checkProduct = await api

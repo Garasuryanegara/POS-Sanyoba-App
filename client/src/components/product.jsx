@@ -10,6 +10,14 @@ import {
 	Image,
 	InputGroup,
 	InputLeftElement,
+	Menu,
+	MenuButton,
+	MenuList,
+	MenuItem,
+	Modal,
+	ModalOverlay,
+	ModalContent,
+	useDisclosure,
 } from "@chakra-ui/react";
 import {
 	MdArrowDropUp,
@@ -21,10 +29,27 @@ import {
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { RxMagnifyingGlass } from "react-icons/rx";
 import kue from "../assets/kue.jpg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { api } from "../api/api";
+import { EditProduct } from "./ModalProduct";
 
-export default function Product() {
+export default function Product(props) {
 	const [menu, setMenu] = useState([]);
+	const { isOpen, onOpen, onClose } = useDisclosure();
+
+	useEffect(() => {
+		getAll();
+	}, []);
+
+	async function deleteMenu(id) {
+		await api.delete("/menus/" + id);
+	}
+
+	async function getAll() {
+		const all = await api.get("/menus/all");
+		setMenu(all);
+	}
+
 	return (
 		<>
 			<Box
@@ -342,7 +367,7 @@ export default function Product() {
 														h={"24px"}
 														borderRadius={"4px"}
 													/>
-													<Text>Carrot Cake</Text>
+													<Text>{val.name} </Text>
 												</Flex>
 											</Flex>
 											<Flex
@@ -358,7 +383,7 @@ export default function Product() {
 													alignItems={"center"}
 												>
 													<Text>
-														Defuze Mega Mall
+														Grand Batam Mall
 													</Text>
 												</Flex>
 											</Flex>
@@ -389,7 +414,9 @@ export default function Product() {
 													gap={"5px"}
 													alignItems={"center"}
 												>
-													<Text>Cake</Text>
+													<Text>
+														{val.category_id}
+													</Text>
 												</Flex>
 											</Flex>
 											<Flex
@@ -404,7 +431,7 @@ export default function Product() {
 													gap={"5px"}
 													alignItems={"center"}
 												>
-													<Text>Rp 35.000</Text>
+													<Text>{val.price}</Text>
 												</Flex>
 											</Flex>
 											<Flex
@@ -431,12 +458,38 @@ export default function Product() {
 													</Text>
 												</Flex>
 											</Flex>
-											<Icon
-												as={BiDotsHorizontalRounded}
-												w={"16px"}
-												h={"48px"}
-												cursor={"pointer"}
-											></Icon>
+											<Menu>
+												<MenuButton
+													as={BiDotsHorizontalRounded}
+													w={"16px"}
+													h={"48px"}
+													cursor={"pointer"}
+												/>
+												<MenuList>
+													<MenuItem>Publish</MenuItem>
+													<MenuItem onClick={onOpen}>
+														Edit
+													</MenuItem>
+													<Modal
+														isOpen={isOpen}
+														onClose={onClose}
+													>
+														<ModalOverlay />
+														<ModalContent>
+															<EditProduct
+																onClose={
+																	onClose
+																}
+															/>
+														</ModalContent>
+													</Modal>
+													<MenuItem
+														onClick={deleteMenu}
+													>
+														Remove
+													</MenuItem>
+												</MenuList>
+											</Menu>
 										</Flex>
 									);
 							  })
