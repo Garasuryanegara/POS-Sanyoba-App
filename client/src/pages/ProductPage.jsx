@@ -1,6 +1,6 @@
 import Product from "../components/product";
 
-export default function AddProductPage() {
+export default function ProductPage() {
 	return (
 		<>
 			<Product />
