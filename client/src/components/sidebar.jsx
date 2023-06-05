@@ -9,12 +9,11 @@ export default function Sidebar() {
         fontWeight="700"
         lineHeight="41px"
         bgColor="#1D5E48"
-        h="130px"
+        h="65px"
         flexDir="column"
         w="100%"
         color="#FFFFFF"
       >
-        <Box fontSize="30px">CASHERE</Box>
         <Box>
           <Box fontSize="14px">SANYOBA</Box>
         </Box>
