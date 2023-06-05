@@ -25,8 +25,8 @@ const orderControllers = {
         where: {
           createdAt: {
             [Op.between]: [
-              moment(time1 ? time1 : moment()).format(),
-              moment(time2 ? time2 : moment())
+              moment(time1 ? time1 : moment("00:00:00", "hh:mm:ss")).format(),
+              moment(time2 ? time2 : moment("00:00:00", "hh:mm:ss"))
                 .add(1, "days")
                 .format(),
             ],
@@ -37,8 +37,8 @@ const orderControllers = {
         where: {
           createdAt: {
             [Op.between]: [
-              moment(time1 ? time1 : moment()).format(),
-              moment(time2 ? time2 : moment())
+              moment(time1 ? time1 : moment("00:00:00", "hh:mm:ss")).format(),
+              moment(time2 ? time2 : moment("00:00:00", "hh:mm:ss"))
                 .add(1, "days")
                 .format(),
             ],
