@@ -148,7 +148,7 @@ const userController = {
       "/Users/image/render/" +
       req.params.id;
 
-=======
+
 //           const token = await db.Token.create({
 //             expired: moment().add(1, "days").format(),
 //             token: nanoid(),
