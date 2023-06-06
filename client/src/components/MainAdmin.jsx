@@ -6,29 +6,28 @@ import AreaChart from "./areaChart";
 
 export default function MainAdmin() {
   return (
-    <Box width={"100%"}>
-      <Box left={"224px"} top={"0px"} background={"#FFFFFF"}>
+    <Box>
+      <Box
+        left={"224px"}
+        top={"0px"}
+        background={"#FFFFFF"}
+        // width={"1216px"}
+        // width={"100%"}
+      >
         <ProfileAdmin></ProfileAdmin>
       </Box>
 
       <Box
         top={"154px"}
         left={"224px"}
-        width={"100%"}
-        // height={"388px"}
+        // width={"1216px"}
       >
         <MenuDash></MenuDash>
+        <Flex flexDir={"column"} gap={"16px"}>
+          {/* <AreaChart></AreaChart> */}
+          {/* <TableAdmin></TableAdmin> */}
+        </Flex>
       </Box>
-      <Flex
-        flexDir={"column"}
-        gap={"16px"}
-        justifyContent={"center"}
-        alignItems={"center"}
-        // padding={"50px"}
-      >
-        <AreaChart></AreaChart>
-        {/* <TableAdmin></TableAdmin> */}
-      </Flex>
     </Box>
   );
 }
