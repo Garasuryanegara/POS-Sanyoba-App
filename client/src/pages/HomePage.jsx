@@ -1,3 +1,7 @@
 export default function Homepage() {
-	return <></>;
+  return (
+    <>
+      <h1>HALO ini kasiiir</h1>
+    </>
+  );
 }
