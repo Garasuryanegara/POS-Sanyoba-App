@@ -60,10 +60,10 @@ db.Order.belongsTo(db.User, {
 db.Menu.belongsTo(db.Category, {
   foreignKey: "category_id",
 });
-db.Order.hasMany(db.OrderDetail, {
+db.OrderDetail.belongsTo(db.Order, {
   foreignKey: "order_id",
 });
-db.Menu.hasMany(db.OrderDetail, {
+db.OrderDetail.belongsTo(db.Menu, {
   foreignKey: "menu_id",
 });
 
