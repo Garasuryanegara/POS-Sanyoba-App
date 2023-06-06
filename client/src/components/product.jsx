@@ -28,26 +28,30 @@ import {
 } from "react-icons/md";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { RxMagnifyingGlass } from "react-icons/rx";
-import kue from "../assets/kue.jpg";
 import { useState, useEffect } from "react";
 import { api } from "../api/api";
 import { EditProduct } from "./ModalProduct";
 
-export default function Product(props) {
+export default function Product() {
 	const [menu, setMenu] = useState([]);
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
+	console.log(menu);
 	useEffect(() => {
 		getAll();
 	}, []);
 
-	async function deleteMenu(id) {
-		await api.delete("/menus/" + id);
+	async function deleteMenu() {
+		await api.delete("/menus/" + menu[0].id);
+		alert("Product deleted");
+		getAll();
 	}
 
 	async function getAll() {
-		const all = await api.get("/menus/all");
-		setMenu(all);
+		await api.get("/menus/all").then((res) => {
+			console.log(res.data);
+			setMenu(res.data);
+		});
 	}
 
 	return (
@@ -332,8 +336,8 @@ export default function Product(props) {
 							<Flex w={"16px"} h={"48px"}></Flex>
 						</Flex>
 						{/* map */}
-						{menu.data?.length
-							? menu?.data.map((val) => {
+						{menu.length
+							? menu?.map((val) => {
 									return (
 										<Flex
 											flexDir={"row"}
@@ -362,7 +366,7 @@ export default function Product(props) {
 												>
 													<Checkbox />
 													<Image
-														src={kue}
+														src={val.img_url}
 														w={"24px"}
 														h={"24px"}
 														borderRadius={"4px"}

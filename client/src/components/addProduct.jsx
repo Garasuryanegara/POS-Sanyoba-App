@@ -8,18 +8,19 @@ import {
 	Text,
 	Select,
 	Switch,
+	Image,
 } from "@chakra-ui/react";
 import { HiOutlineUpload } from "react-icons/hi";
 import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { api } from "../api/api";
 
 export default function AddProduct() {
 	const inputFileRef = useRef(null);
 	const [selectedFile, setSelectedFile] = useState(null);
+	const [imgUrl, setImgUrl] = useState();
 	const nav = useNavigate();
-	let menu;
 
 	useEffect(() => {
 		categoryId();
@@ -36,23 +37,32 @@ export default function AddProduct() {
 	const formik = useFormik({
 		initialValues: {
 			name: "",
+			filename: "",
 			desc: "",
 			price: "",
 			category_id: "",
 		},
 		onSubmit: async () => {
-			const { name, desc, price, category_id } = formik.values;
-			const product = {
-				name,
-				desc,
-				price,
-				category_id,
-			};
+			const { name, filename, desc, price, category_id } = formik.values;
+			const product = new FormData();
+			console.log(filename);
+			product.append("productImg", filename);
+			product.append("name", name);
+			product.append("desc", desc);
+			product.append("price", price);
+			product.append("category_id", category_id);
+
+			// const product = {
+			// 	name,
+			// 	filename: formData,
+			// 	desc,
+			// 	price,
+			// 	category_id,
+			// };
 			const checkProduct = await api
 				.get("/menus/Draft", {
 					params: {
 						nameCat: product.name,
-						category_id: product.category_id,
 					},
 				})
 				.then((res) => {
@@ -65,7 +75,8 @@ export default function AddProduct() {
 			if (checkProduct) {
 				return alert("product already exist");
 			} else {
-				await api.post("/menus/", product).then((res) => {
+				console.log(product);
+				await api.post("/menus", product).then((res) => {
 					alert("product added");
 					nav("/product");
 				});
@@ -75,11 +86,23 @@ export default function AddProduct() {
 
 	async function inputHandler(event) {
 		const { value, id } = event.target;
+
 		formik.setFieldValue(id, value);
 	}
 
-	const handleFile = (event) => {
-		setSelectedFile(event.target.files[0]);
+	const handleFile = async (event) => {
+		const file = event.target.files[0];
+		formik.setFieldValue("filename", file);
+		console.log(file);
+		setSelectedFile(file);
+
+		//buat ngemuncuin gambar----------
+		const reader = new FileReader();
+		reader.onload = () => {
+			setImgUrl(reader.result);
+		};
+		reader.readAsDataURL(file);
+		//--------------------------------
 	};
 	return (
 		<>
@@ -381,51 +404,86 @@ export default function AddProduct() {
 							display. You can upload a maximum of 5 photos.
 						</Flex>
 					</Flex>
-					<Box
-						display={"flex"}
-						flexDir={"column"}
-						justifyContent={"center"}
-						alignItems={"center"}
-						padding={"16px"}
-						gap={"16px"}
-						w={"140px"}
-						h={"160px"}
-						border={"1px dashed rgba(53, 53, 53, 0.3);"}
-						borderRadius={"8px"}
-						flex={"none"}
-						flexGrow={"0"}
-						textAlign={"center"}
-						fontFamily={"roboto"}
-						fontStyle={"normal"}
-						fontWeight={"400"}
-						fontSize={"12px"}
-						lineHeight={"14px"}
-						color={"#353535"}
-					>
-						<Icon as={HiOutlineUpload} w={"16px"} h={"16px"} />
-						<>
-							<Text as={"span"}>
-								Drag and Drop File or{" "}
-								<Text
-									as={"span"}
-									onClick={() => inputFileRef.current.click()}
-									cursor={"pointer"}
-									color={"#45BB71"}
-									textDecor={"underline"}
-								>
-									Browse
+					<>
+						<Input
+							accept="image/png, image/jpeg"
+							onChange={(e) => {
+								handleFile(e);
+								// inputHandler(e);
+							}}
+							ref={inputFileRef}
+							type="file"
+							display={"none"}
+							id="filename"
+						></Input>
+						{!selectedFile ? (
+							<Box
+								display={"flex"}
+								flexDir={"column"}
+								justifyContent={"center"}
+								alignItems={"center"}
+								padding={"16px"}
+								gap={"16px"}
+								w={"140px"}
+								h={"160px"}
+								border={"1px dashed rgba(53, 53, 53, 0.3);"}
+								borderRadius={"8px"}
+								flex={"none"}
+								flexGrow={"0"}
+								textAlign={"center"}
+								fontFamily={"roboto"}
+								fontStyle={"normal"}
+								fontWeight={"400"}
+								fontSize={"12px"}
+								lineHeight={"14px"}
+								color={"#353535"}
+							>
+								<Icon
+									as={HiOutlineUpload}
+									w={"16px"}
+									h={"16px"}
+								/>
+								<Text as={"span"}>
+									Drag and Drop File or{" "}
+									<Text
+										as={"span"}
+										onClick={() =>
+											inputFileRef.current.click()
+										}
+										cursor={"pointer"}
+										color={"#45BB71"}
+										textDecor={"underline"}
+									>
+										Browse
+									</Text>
 								</Text>
-							</Text>
-
-							<Input
-								accept="image/png, image/jpeg"
-								onChange={handleFile}
-								ref={inputFileRef}
-								type="file"
-								display={"none"}
-							></Input>
-						</>
-					</Box>
+							</Box>
+						) : (
+							<Image
+								onClick={() => setSelectedFile(0)}
+								display={"flex"}
+								flexDir={"column"}
+								justifyContent={"center"}
+								alignItems={"center"}
+								padding={"16px"}
+								gap={"16px"}
+								w={"140px"}
+								h={"160px"}
+								border={"1px dashed rgba(53, 53, 53, 0.3);"}
+								borderRadius={"8px"}
+								flex={"none"}
+								flexGrow={"0"}
+								textAlign={"center"}
+								fontFamily={"roboto"}
+								fontStyle={"normal"}
+								fontWeight={"400"}
+								fontSize={"12px"}
+								lineHeight={"14px"}
+								color={"#353535"}
+								src={imgUrl}
+							></Image>
+						)}
+					</>
 				</Flex>
 				{/* sku */}
 				<Flex

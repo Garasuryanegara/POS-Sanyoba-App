@@ -5,19 +5,7 @@ const { Category } = require("../models");
 const menuControllers = {
 	getAll: async (req, res) => {
 		try {
-			const { id } = req.query;
-			await db.Menu.findAll({
-				where: {
-					[Op.and]: [
-						{
-							// id: id,
-						},
-						{
-							deletedAt: null,
-						},
-					],
-				},
-			}).then((result) => res.send(result));
+			await db.Menu.findAll().then((result) => res.send(result));
 		} catch (err) {
 			console.log(err);
 			res.status(500).send({
@@ -27,10 +15,13 @@ const menuControllers = {
 	},
 	insert: async (req, res) => {
 		try {
+			console.log(req.file);
 			const { name, price, category_id } = req.body;
+			const { filename } = req.file;
 			await db.Menu.create({
 				name,
 				price,
+				img_url: process.env.url_img + filename,
 				category_id,
 			}).then((result) => res.send(result));
 		} catch (err) {
@@ -115,6 +106,44 @@ const menuControllers = {
 			res.status(500).send({
 				message: err.message,
 			});
+		}
+	},
+	deleteMenu: async (req, res) => {
+		try {
+			await db.Menu.destroy({
+				where: {
+					id: req.params.id,
+				},
+			});
+			return res.status(200).send({
+				message: "Product berhasil dihapus",
+			});
+		} catch (error) {
+			res.status(500).send({
+				message: error.message,
+			});
+		}
+	},
+	editMenu: async (req, res) => {
+		try {
+			const { name, price, category_id } = req.body;
+			const { filename } = req.file;
+			await db.Menu.update(
+				{
+					name,
+					price,
+					category_id,
+					img_url: process.env.url_img + filename,
+				},
+				{
+					where: {
+						id: req.params.id,
+					},
+				}
+			).then((result) => res.send(result));
+		} catch (err) {
+			console.log(err.message);
+			return res.status(500).send({ message: err.message });
 		}
 	},
 };

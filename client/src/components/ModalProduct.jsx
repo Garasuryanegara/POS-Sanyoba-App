@@ -15,6 +15,14 @@ import { api } from "../api/api";
 export function EditProduct(props) {
 	const [selectedFile, setSelectedFile] = useState(null);
 	const inputFileRef = useRef(null);
+	const [categoryList, setCategoryList] = useState([]);
+	const [product, setProduct] = useState({
+		name: "",
+		price: "",
+		category_id: "",
+	});
+
+	const [image, setImage] = useState();
 
 	const handleFile = (event) => {
 		setSelectedFile(event.target.files[0]);
@@ -23,8 +31,6 @@ export function EditProduct(props) {
 	useEffect(() => {
 		categoryId();
 	}, []);
-
-	const [categoryList, setCategoryList] = useState([]);
 
 	const categoryId = async () => {
 		await api.get("/categories", categoryList).then((res) => {
