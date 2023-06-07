@@ -8,101 +8,19 @@ import {
 	Text,
 	Select,
 	Switch,
-	Image,
 } from "@chakra-ui/react";
 import { HiOutlineUpload } from "react-icons/hi";
-import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { api } from "../api/api";
 
 export default function AddProduct() {
 	const inputFileRef = useRef(null);
 	const [selectedFile, setSelectedFile] = useState(null);
-	const [imgUrl, setImgUrl] = useState();
-	const nav = useNavigate();
 
-	useEffect(() => {
-		categoryId();
-	}, []);
-
-	const [categoryList, setCategoryList] = useState([]);
-
-	const categoryId = async () => {
-		await api.get("/categories", categoryList).then((res) => {
-			setCategoryList(res.data);
-		});
-	};
-
-	const formik = useFormik({
-		initialValues: {
-			name: "",
-			filename: "",
-			desc: "",
-			price: "",
-			category_id: "",
-		},
-		onSubmit: async () => {
-			const { name, filename, desc, price, category_id } = formik.values;
-			const product = new FormData();
-			console.log(filename);
-			product.append("productImg", filename);
-			product.append("name", name);
-			product.append("desc", desc);
-			product.append("price", price);
-			product.append("category_id", category_id);
-
-			// const product = {
-			// 	name,
-			// 	filename: formData,
-			// 	desc,
-			// 	price,
-			// 	category_id,
-			// };
-			const checkProduct = await api
-				.get("/menus/Draft", {
-					params: {
-						nameCat: product.name,
-					},
-				})
-				.then((res) => {
-					if (res.data.length) {
-						return true;
-					} else {
-						return false;
-					}
-				});
-			if (checkProduct) {
-				return alert("product already exist");
-			} else {
-				console.log(product);
-				await api.post("/menus", product).then((res) => {
-					alert("product added");
-					nav("/product");
-				});
-			}
-		},
-	});
-
-	async function inputHandler(event) {
-		const { value, id } = event.target;
-
-		formik.setFieldValue(id, value);
-	}
-
-	const handleFile = async (event) => {
-		const file = event.target.files[0];
-		formik.setFieldValue("filename", file);
-		console.log(file);
-		setSelectedFile(file);
-
-		//buat ngemuncuin gambar----------
-		const reader = new FileReader();
-		reader.onload = () => {
-			setImgUrl(reader.result);
-		};
-		reader.readAsDataURL(file);
-		//--------------------------------
+	const handleFile = (event) => {
+		setSelectedFile(event.target.files[0]);
 	};
 	return (
 		<>
@@ -124,7 +42,6 @@ export default function AddProduct() {
 				fontSize={"12px"}
 				lineHeight={"14px"}
 				color={"#353535"}
-				background={"#ffff"}
 			>
 				<Flex id="productInfo">Product Information</Flex>
 
@@ -171,8 +88,6 @@ export default function AddProduct() {
 						placeholder="e.g. Chocolate Truffle Cake"
 						h={"32px"}
 						w={"423px"}
-						id="name"
-						onChange={inputHandler}
 					></Input>
 				</Flex>
 				{/* product desc */}
@@ -190,8 +105,6 @@ export default function AddProduct() {
 						placeholder="e.g. Best Seller"
 						h={"107px"}
 						w={"423px"}
-						id="desc"
-						onChange={inputHandler}
 					></Input>
 				</Flex>
 				{/* price */}
@@ -232,8 +145,6 @@ export default function AddProduct() {
 								placeholder="e.g. Rp 30.000"
 								h={"32px"}
 								w={"269.33px"}
-								id="price"
-								onChange={inputHandler}
 							></Input>
 						</Flex>
 						<Flex
@@ -299,30 +210,12 @@ export default function AddProduct() {
 						flex={"none"}
 						flexGrow={"0"}
 					>
-						<Select
-							fontStyle={"normal"}
-							fontWeight={"500"}
-							fontSize={"12px"}
-							lineHeight={"14px"}
-							className="select"
-							boxSizing="border-box"
-							display={"flex"}
-							flexDir={"row"}
-							justifyContent={"space-between"}
-							alignItems={"center"}
-							gap={"202px"}
-							h={"32px"}
+						<Input
+							className="input"
+							placeholder="e.g. Cake"
 							w={"423px"}
-							borderRadius={"8px"}
-							placeholder="Choose category"
-							id="category_id"
-							onChange={inputHandler}
-						>
-							{categoryList.map((val) => (
-								<option value={val.id}>{val.category}</option>
-							))}
-						</Select>
-
+							h={"32px"}
+						></Input>
 						<Button
 							display={"flex"}
 							flexDir={"row"}
@@ -404,86 +297,51 @@ export default function AddProduct() {
 							display. You can upload a maximum of 5 photos.
 						</Flex>
 					</Flex>
-					<>
-						<Input
-							accept="image/png, image/jpeg"
-							onChange={(e) => {
-								handleFile(e);
-								// inputHandler(e);
-							}}
-							ref={inputFileRef}
-							type="file"
-							display={"none"}
-							id="filename"
-						></Input>
-						{!selectedFile ? (
-							<Box
-								display={"flex"}
-								flexDir={"column"}
-								justifyContent={"center"}
-								alignItems={"center"}
-								padding={"16px"}
-								gap={"16px"}
-								w={"140px"}
-								h={"160px"}
-								border={"1px dashed rgba(53, 53, 53, 0.3);"}
-								borderRadius={"8px"}
-								flex={"none"}
-								flexGrow={"0"}
-								textAlign={"center"}
-								fontFamily={"roboto"}
-								fontStyle={"normal"}
-								fontWeight={"400"}
-								fontSize={"12px"}
-								lineHeight={"14px"}
-								color={"#353535"}
-							>
-								<Icon
-									as={HiOutlineUpload}
-									w={"16px"}
-									h={"16px"}
-								/>
-								<Text as={"span"}>
-									Drag and Drop File or{" "}
-									<Text
-										as={"span"}
-										onClick={() =>
-											inputFileRef.current.click()
-										}
-										cursor={"pointer"}
-										color={"#45BB71"}
-										textDecor={"underline"}
-									>
-										Browse
-									</Text>
+					<Box
+						display={"flex"}
+						flexDir={"column"}
+						justifyContent={"center"}
+						alignItems={"center"}
+						padding={"16px"}
+						gap={"16px"}
+						w={"140px"}
+						h={"160px"}
+						border={"1px dashed rgba(53, 53, 53, 0.3);"}
+						borderRadius={"8px"}
+						flex={"none"}
+						flexGrow={"0"}
+						textAlign={"center"}
+						fontFamily={"roboto"}
+						fontStyle={"normal"}
+						fontWeight={"400"}
+						fontSize={"12px"}
+						lineHeight={"14px"}
+						color={"#353535"}
+					>
+						<Icon as={HiOutlineUpload} w={"16px"} h={"16px"} />
+						<>
+							<Text as={"span"}>
+								Drag and Drop File or{" "}
+								<Text
+									as={"span"}
+									onClick={() => inputFileRef.current.click()}
+									cursor={"pointer"}
+									color={"#45BB71"}
+									textDecor={"underline"}
+								>
+									Browse
 								</Text>
-							</Box>
-						) : (
-							<Image
-								onClick={() => setSelectedFile(0)}
-								display={"flex"}
-								flexDir={"column"}
-								justifyContent={"center"}
-								alignItems={"center"}
-								padding={"16px"}
-								gap={"16px"}
-								w={"140px"}
-								h={"160px"}
-								border={"1px dashed rgba(53, 53, 53, 0.3);"}
-								borderRadius={"8px"}
-								flex={"none"}
-								flexGrow={"0"}
-								textAlign={"center"}
-								fontFamily={"roboto"}
-								fontStyle={"normal"}
-								fontWeight={"400"}
-								fontSize={"12px"}
-								lineHeight={"14px"}
-								color={"#353535"}
-								src={imgUrl}
-							></Image>
-						)}
-					</>
+							</Text>
+
+							<Input
+								accept="image/png, image/jpeg"
+								onChange={handleFile}
+								ref={inputFileRef}
+								type="file"
+								display={"none"}
+							></Input>
+						</>
+					</Box>
 				</Flex>
 				{/* sku */}
 				<Flex
@@ -642,7 +500,6 @@ export default function AddProduct() {
 							lineHeight={"14px"}
 							color={"white"}
 							bgColor={"#369A64"}
-							onClick={formik.handleSubmit}
 						>
 							Add Product
 						</Button>

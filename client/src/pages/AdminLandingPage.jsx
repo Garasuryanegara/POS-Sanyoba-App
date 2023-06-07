@@ -2,7 +2,6 @@ import { Container, Box, Center } from "@chakra-ui/react";
 import SidebarAdmin from "../components/SidebarAdmin";
 import MainAdmin from "../components/MainAdmin";
 export default function AdminPage() {
-
   return (
     <Box
       // height={"100vh"}
