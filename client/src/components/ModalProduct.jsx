@@ -11,7 +11,6 @@ import {
 import { useState, useRef, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
 import { api } from "../api/api";
-import { useNavigate } from "react-router-dom";
 
 export function EditProduct(props) {
 	const [imgUrl, setImgUrl] = useState();
@@ -42,13 +41,6 @@ export function EditProduct(props) {
 		product.append("price", price);
 		product.append("category_id", category_id);
 
-		// const product = {
-		// 	name,
-		// 	filename: formData,
-		// 	desc,
-		// 	price,
-		// 	category_id,
-		// };
 		const checkProduct = await api
 			.get("/menus/Draft", {
 				params: {
@@ -67,8 +59,9 @@ export function EditProduct(props) {
 		} else {
 			console.log(product);
 			await api.patch("/menus/" + props.id, product).then((res) => {
-				alert("product edited");
+				// alert("product edited");
 				props.onClose();
+				props.getAll();
 			});
 		}
 	}
