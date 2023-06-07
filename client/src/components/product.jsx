@@ -49,7 +49,7 @@ export default function Product() {
 
 	async function deleteMenu(val) {
 		await api.delete("/menus/" + val.id);
-		alert("Product deleted");
+		// alert("Product deleted");
 		getAll();
 	}
 
