@@ -13,24 +13,81 @@ import { IoMdClose } from "react-icons/io";
 import { api } from "../api/api";
 
 export function EditProduct(props) {
-	const [selectedFile, setSelectedFile] = useState(null);
-	const inputFileRef = useRef(null);
-	const [categoryList, setCategoryList] = useState([]);
-	const [product, setProduct] = useState({
+	const [imgUrl, setImgUrl] = useState();
+	const [jembut, setJembut] = useState({
 		name: "",
-		price: "",
+		filename: "",
+		desc: "",
+		price: 0,
 		category_id: "",
 	});
+	const inputFileRef = useRef(null);
 
-	const [image, setImage] = useState();
+	async function inputHandler(event) {
+		const { value, id } = event.target;
+		let tempObj = {};
+		tempObj[id] = value;
+		setJembut({ ...jembut, ...tempObj });
+	}
 
-	const handleFile = (event) => {
-		setSelectedFile(event.target.files[0]);
+	async function onSubmit() {
+		const { name, filename, desc, price, category_id } = jembut;
+		const product = new FormData();
+		console.log(filename);
+		product.append("productImg", filename);
+		product.append("name", name);
+		product.append("desc", desc);
+		product.append("price", price);
+		product.append("category_id", category_id);
+
+		// const product = {
+		// 	name,
+		// 	filename: formData,
+		// 	desc,
+		// 	price,
+		// 	category_id,
+		// };
+		const checkProduct = await api
+			.get("/menus/Draft", {
+				params: {
+					nameCat: product.name,
+				},
+			})
+			.then((res) => {
+				if (res.data.length) {
+					return true;
+				} else {
+					return false;
+				}
+			});
+		if (checkProduct) {
+			return alert("product already exist");
+		} else {
+			console.log(product);
+			await api.patch("/menus/" + props.id, product).then((res) => {
+				alert("product patched");
+			});
+		}
+	}
+
+	const handleFile = async (event) => {
+		const file = event.target.files[0];
+		console.log(file);
+		setJembut({ ...jembut, filename: file });
+		//buat ngemuncuin gambar----------
+		const reader = new FileReader();
+		reader.onload = () => {
+			setImgUrl(reader.result);
+		};
+		reader.readAsDataURL(file);
+		//--------------------------------
 	};
 
 	useEffect(() => {
 		categoryId();
 	}, []);
+
+	const [categoryList, setCategoryList] = useState([]);
 
 	const categoryId = async () => {
 		await api.get("/categories", categoryList).then((res) => {
@@ -69,7 +126,7 @@ export function EditProduct(props) {
 					justifyContent={"space-between"}
 				>
 					<Flex flexDir={"column"} gap="10px">
-						<Image w={"180px"} h="180px"></Image>
+						<Image w={"180px"} h="180px" src={imgUrl}></Image>
 						<Input
 							accept="image/png, image/jpeg"
 							ref={inputFileRef}
@@ -89,15 +146,31 @@ export function EditProduct(props) {
 							w="280px"
 							h="40px"
 							placeholder="Product name"
+							id="name"
+							onChange={inputHandler}
 						></Input>
 						<Textarea
 							w="280px"
 							h="40px"
 							placeholder="Product description"
 							resize={"none"}
+							id="desc"
+							onChange={inputHandler}
 						></Textarea>
-						<Input w="280px" h="40px" placeholder="Price"></Input>
-						<Select w="280px" h="40px" borderRadius={"8px"}>
+						<Input
+							w="280px"
+							h="40px"
+							placeholder="Price"
+							id="price"
+							onChange={inputHandler}
+						></Input>
+						<Select
+							w="280px"
+							h="40px"
+							borderRadius={"8px"}
+							id="category_id"
+							onChange={inputHandler}
+						>
 							{categoryList.map((val) => (
 								<option value={val.id}>{val.category}</option>
 							))}
@@ -114,6 +187,7 @@ export function EditProduct(props) {
 						h="48px"
 						w="90%"
 						cursor={"pointer"}
+						onClick={onSubmit}
 					>
 						SAVE
 					</Center>

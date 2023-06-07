@@ -41,8 +41,8 @@ export default function Product() {
 		getAll();
 	}, []);
 
-	async function deleteMenu() {
-		await api.delete("/menus/" + menu[0].id);
+	async function deleteMenu(val) {
+		await api.delete("/menus/" + val.id);
 		alert("Product deleted");
 		getAll();
 	}
@@ -484,11 +484,14 @@ export default function Product() {
 																onClose={
 																	onClose
 																}
+																id={val.id}
 															/>
 														</ModalContent>
 													</Modal>
 													<MenuItem
-														onClick={deleteMenu}
+														onClick={() => {
+															deleteMenu(val);
+														}}
 													>
 														Remove
 													</MenuItem>

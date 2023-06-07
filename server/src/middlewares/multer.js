@@ -6,7 +6,6 @@ const fileUploader = ({
 	prefix = "POST",
 	fileType = "image",
 }) => {
-	console.log("ini multer");
 	const storageConfig = multer.diskStorage({
 		destination: (req, file, cb) => {
 			console.log("sadsadada");

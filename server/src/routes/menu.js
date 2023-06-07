@@ -3,15 +3,15 @@ const router = express.Router();
 const menuControllers = require("../controllers").menuControllers;
 const { fileUploader, upload } = require("../middlewares/multer");
 
+router.get("/", menuControllers.getMenu);
+router.get("/Draft", menuControllers.getMenuDraft);
+router.get("/all", menuControllers.getAll);
+router.delete("/:id", menuControllers.deleteMenu);
 router.post(
 	"/",
 	fileUploader({ destinationFolder: "productImg" }).single("productImg"),
 	menuControllers.insert
 );
-router.get("/", menuControllers.getMenu);
-router.get("/Draft", menuControllers.getMenuDraft);
-router.get("/all", menuControllers.getAll);
-router.delete("/:id", menuControllers.deleteMenu);
 router.patch(
 	"/:id",
 	fileUploader({
