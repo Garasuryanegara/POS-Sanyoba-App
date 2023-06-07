@@ -6,14 +6,13 @@ module.exports = (sequelize, Sequelize) => {
       phone: Sequelize.STRING,
       address: Sequelize.STRING,
       password: Sequelize.STRING,
-      role: Sequelize.ENUM("admin", "user"),
+      role: Sequelize.ENUM("admin", "cashier"),
       active: {
         type: Sequelize.BOOLEAN,
-        defaultValue: true,
-        allowNull: false,
+        defaultValues: true,
       },
-      img_url: {
-        type: Sequelize.STRING,
+      avatar_blob: {
+        type: Sequelize.BLOB("long"),
       },
     },
     {
