@@ -9,10 +9,11 @@ module.exports = (sequelize, Sequelize) => {
       role: Sequelize.ENUM("admin", "user"),
       active: {
         type: Sequelize.BOOLEAN,
-        defaultValues: true,
+        defaultValue: true,
+        allowNull: false,
       },
-      avatar_blob: {
-        type: Sequelize.BLOB("long"),
+      img_url: {
+        type: Sequelize.STRING,
       },
     },
     {
