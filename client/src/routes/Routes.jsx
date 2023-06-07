@@ -9,6 +9,7 @@ const routes = [
   <Route path="/cashier" element={<Homepage />} />,
   <Route path="/admin" element={<AdminPage />}></Route>,
   <Route path="/addProduct" element={<AddProductPage />} />,
+  <Route path="/staff" element={<AddProductPage />} />,
   <Route path="/product" element={<ProductPage />} />,
   <Route path="/trxDetail" element={<TransactionDetailPage />}></Route>,
 ];

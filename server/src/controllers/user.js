@@ -227,8 +227,9 @@ const userController = {
   /// Admin handle Staff
   insertUser: async (req, res) => {
     try {
-      const { name, phone, address, password, role, img_url } = req.body;
+      const { name, phone, address, password, role } = req.body;
       const hashPassword = await bcrypt.hash(password, 10);
+      const { filename } = req.file;
 
       await db.User.create({
         name,
@@ -236,7 +237,7 @@ const userController = {
         address,
         password: hashPassword,
         role,
-        img_url,
+        img_url: process.env.url_image + filename,
       });
       return await db.User.findAll().then((result) => {
         res.send(result);
@@ -247,22 +248,42 @@ const userController = {
       });
     }
   },
-  searchUser: async (req, res) => {
-    try {
-      const result = await db.User.findAll();
-      res.send(result);
-    } catch (err) {
-      return res.status(500).send({
-        message: err.message,
-      });
-    }
-  },
+
   getUser: async (req, res) => {
     try {
-      const result = await db.User.findAll();
-      res.send(result);
+      const { limit, offset, column, sort, search } = req.query;
+      const whereClause = {};
+      let totalPages;
+      let orderClause;
+
+      if (search) {
+        whereClause.name = {
+          [Op.like]: `%${search}%`,
+        };
+      }
+      if (column) {
+        orderClause = [[column, sort]];
+      }
+      if (limit) {
+        const totalCount = await db.User.count({
+          where: whereClause,
+        });
+        totalPages = Math.ceil(totalCount / limit);
+      }
+
+      const menus = await db.User.findAll({
+        where: whereClause,
+        order: orderClause,
+        limit: limit ? Number(limit) : null,
+        offset: offset ? Number(offset) : null,
+      });
+      res.send({
+        users: menus,
+        totalPages: totalPages,
+      });
     } catch (err) {
-      return res.status(500).send({
+      console.log(err);
+      res.status(500).send({
         message: err.message,
       });
     }
