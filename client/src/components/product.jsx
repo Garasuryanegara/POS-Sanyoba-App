@@ -18,6 +18,11 @@ import {
 	ModalOverlay,
 	ModalContent,
 	useDisclosure,
+	Button,
+	ModalCloseButton,
+	ModalHeader,
+	ModalBody,
+	ModalFooter,
 } from "@chakra-ui/react";
 import {
 	MdArrowDropUp,
@@ -34,6 +39,7 @@ import { EditProduct } from "./ModalProduct";
 
 export default function Product() {
 	const [menu, setMenu] = useState([]);
+	const [kobel, setKobel] = useState(true);
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	console.log(menu);
@@ -471,7 +477,12 @@ export default function Product() {
 												/>
 												<MenuList>
 													<MenuItem>Publish</MenuItem>
-													<MenuItem onClick={onOpen}>
+													<MenuItem
+														onClick={() => {
+															onOpen();
+															setKobel(true);
+														}}
+													>
 														Edit
 													</MenuItem>
 													<Modal
@@ -480,21 +491,97 @@ export default function Product() {
 													>
 														<ModalOverlay />
 														<ModalContent>
-															<EditProduct
-																onClose={
-																	onClose
-																}
-																id={val.id}
-															/>
+															{kobel ? (
+																<EditProduct
+																	onClose={
+																		onClose
+																	}
+																	id={val.id}
+																/>
+															) : null}
 														</ModalContent>
 													</Modal>
 													<MenuItem
 														onClick={() => {
-															deleteMenu(val);
+															onOpen();
+															setKobel(false);
 														}}
 													>
 														Remove
 													</MenuItem>
+													{!kobel ? (
+														<>
+															<Modal
+																isOpen={isOpen}
+																onClose={
+																	onClose
+																}
+															>
+																<ModalOverlay />
+																<ModalContent>
+																	<ModalHeader>
+																		Remove
+																		Item
+																	</ModalHeader>
+																	<ModalCloseButton />
+																	<ModalBody>
+																		Deleting
+																		the
+																		{` ${val.name} `}
+																		will
+																		permanently
+																		remove
+																		it from
+																		the list
+																		and
+																		cannot
+																		be
+																		undone.
+																	</ModalBody>
+
+																	<ModalFooter>
+																		<Button
+																			w={
+																				"50%"
+																			}
+																			bgColor={
+																				"white"
+																			}
+																			border={
+																				"1px"
+																			}
+																			mr={
+																				3
+																			}
+																			onClick={
+																				onClose
+																			}
+																		>
+																			Close
+																		</Button>
+																		<Button
+																			w={
+																				"50%"
+																			}
+																			bgColor={
+																				"#D0011C	"
+																			}
+																			color={
+																				"white"
+																			}
+																			onClick={() => {
+																				deleteMenu(
+																					val
+																				);
+																			}}
+																		>
+																			Remove
+																		</Button>
+																	</ModalFooter>
+																</ModalContent>
+															</Modal>
+														</>
+													) : null}
 												</MenuList>
 											</Menu>
 										</Flex>

@@ -613,6 +613,7 @@ export default function AddProduct() {
 							lineHeight={"14px"}
 							color={"#369A64"}
 							colorScheme="white"
+							onClick={() => nav("/product")}
 						>
 							Cancel
 						</Button>

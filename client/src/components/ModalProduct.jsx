@@ -11,6 +11,7 @@ import {
 import { useState, useRef, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
 import { api } from "../api/api";
+import { useNavigate } from "react-router-dom";
 
 export function EditProduct(props) {
 	const [imgUrl, setImgUrl] = useState();
@@ -31,6 +32,7 @@ export function EditProduct(props) {
 	}
 
 	async function onSubmit() {
+		console.log(jembut);
 		const { name, filename, desc, price, category_id } = jembut;
 		const product = new FormData();
 		console.log(filename);
@@ -65,7 +67,8 @@ export function EditProduct(props) {
 		} else {
 			console.log(product);
 			await api.patch("/menus/" + props.id, product).then((res) => {
-				alert("product patched");
+				alert("product edited");
+				props.onClose();
 			});
 		}
 	}
@@ -111,7 +114,7 @@ export function EditProduct(props) {
 					fontSize="24px"
 					padding={"24px"}
 				>
-					<Flex fontWeight={"bold"}>Product details</Flex>
+					<Flex fontWeight={"bold"}>Edit product details</Flex>
 					<Flex alignItems={"end"}>
 						<Icon
 							as={IoMdClose}
@@ -171,6 +174,7 @@ export function EditProduct(props) {
 							id="category_id"
 							onChange={inputHandler}
 						>
+							<option value="">Select Categories</option>
 							{categoryList.map((val) => (
 								<option value={val.id}>{val.category}</option>
 							))}
@@ -187,7 +191,7 @@ export function EditProduct(props) {
 						h="48px"
 						w="90%"
 						cursor={"pointer"}
-						onClick={onSubmit}
+						onClick={jembut.category_id ? onSubmit : null}
 					>
 						SAVE
 					</Center>
