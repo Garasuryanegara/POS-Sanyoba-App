@@ -2,7 +2,7 @@ const db = require("../models");
 const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 // const jwt = require("jsonwebtoken");
-const {} = require("nanoid");
+const { nanoid } = require("nanoid");
 const moment = require("moment");
 const sharp = require("sharp");
 const url = process.env.url;
@@ -32,15 +32,16 @@ const userController = {
   },
   login: async (req, res) => {
     try {
-      const { emna, password } = req.query;
+      const { role, name, password } = req.body;
+      console.log(req.body);
       const user = await db.User.findOne({
         where: {
-          [Op.or]: [
+          [Op.and]: [
             {
-              email: emna,
+              name,
             },
             {
-              name: emna,
+              role,
             },
           ],
         },
@@ -48,13 +49,17 @@ const userController = {
       if (user) {
         const match = await bcrypt.compare(password, user.dataValues.password);
         console.log(match);
+        console.log(user.dataValues);
         if (match) {
           const payload = {
             id: user.dataValues.id,
           };
+
+          const generateToken = nanoid();
+
           const token = await db.Token.create({
             expired: moment().add(1, "days").format(),
-            token: nanoid(),
+            token: generateToken,
             payload: JSON.stringify(payload),
             valid: true,
           });
@@ -132,53 +137,6 @@ const userController = {
       return await db.User.findAll().then((result) => {
         res.send(result);
       });
-    } catch (err) {
-      return res.status(500).send({
-        message: err.message,
-      });
-    }
-  },
-  login: async (req, res) => {
-    try {
-      const { emna, password } = req.query;
-      const user = await db.User.findOne({
-        where: {
-          [Op.or]: [
-            {
-              email: emna,
-            },
-            {
-              name: emna,
-            },
-          ],
-        },
-      });
-      if (user) {
-        const match = await bcrypt.compare(password, user.dataValues.password);
-        console.log(match);
-        if (match) {
-          const payload = {
-            id: user.dataValues.id,
-          };
-          const token = await db.Token.create({
-            expired: moment().add(1, "days").format(),
-            token: nanoid(),
-            payload: JSON.stringify(payload),
-            valid: true,
-          });
-          return res.send({
-            message: "login berhasil",
-            value: user,
-            token: token.dataValues.token,
-          });
-        } else {
-          throw new Error("login gagal");
-        }
-      } else {
-        return res.send({
-          message: "login gagal",
-        });
-      }
     } catch (err) {
       return res.status(500).send({
         message: err.message,

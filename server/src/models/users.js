@@ -6,7 +6,7 @@ module.exports = (sequelize, Sequelize) => {
       phone: Sequelize.STRING,
       address: Sequelize.STRING,
       password: Sequelize.STRING,
-      role: Sequelize.ENUM("admin", "user"),
+      role: Sequelize.ENUM("admin", "cashier"),
       active: {
         type: Sequelize.BOOLEAN,
         defaultValue: true,
