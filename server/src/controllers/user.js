@@ -116,6 +116,49 @@ const userController = {
   getUserByToken: async (req, res) => {
     res.send(req.user);
   },
+  /// Admin handle Staff
+  insertUser: async (req, res) => {
+    try {
+      const { name, phone, address, password, role, img_url } = req.body;
+      const hashPassword = await bcrypt.hash(password, 10);
+
+      await db.User.create({
+        name,
+        phone,
+        address,
+        password: hashPassword,
+        role,
+        img_url,
+      });
+      return await db.User.findAll().then((result) => {
+        res.send(result);
+      });
+    } catch (err) {
+      return res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+  searchUser: async (req, res) => {
+    try {
+      const result = await db.User.findAll();
+      res.send(result);
+    } catch (err) {
+      return res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+  getUser: async (req, res) => {
+    try {
+      const result = await db.User.findAll();
+      res.send(result);
+    } catch (err) {
+      return res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
   uploadAvatar: async (req, res) => {
     const buffer = await sharp(req.file.buffer)
       .resize(250, 250)
