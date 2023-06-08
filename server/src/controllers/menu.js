@@ -18,21 +18,31 @@ const menuControllers = {
   },
   getMenu: async (req, res) => {
     try {
-      const { category_id, search } = req.query;
-      const Clause = {};
+      const { limit, offset, category_id } = req.query;
+      const whereClause = {};
+      let totalPages;
+      let orderClause;
+      let totalCount;
       if (category_id) {
-        Clause.category_id = category_id;
+        whereClause.category_id = category_id;
       }
-      if (search) {
-        Clause.name = {
-          [Op.like]: `%${search}%`,
-        };
+      if (limit) {
+        totalCount = await db.Menu.count({
+          where: whereClause,
+        });
+        totalPages = Math.ceil(totalCount / limit);
       }
+
       const menus = await db.Menu.findAll({
-        where: Clause,
+        where: whereClause,
+        order: orderClause,
+        limit: limit ? Number(limit) : null,
+        offset: offset ? Number(offset) : null,
       });
       res.send({
         menus: menus,
+        totalPages: totalPages,
+        totalCount: totalCount,
       });
     } catch (err) {
       console.log(err);

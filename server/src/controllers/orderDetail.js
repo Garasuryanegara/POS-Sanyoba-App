@@ -132,5 +132,23 @@ const orderDetailsControllers = {
       });
     }
   },
+  getOrderList: async (req, res) => {
+    try {
+      const orderList = await db.OrderDetail.findAll({
+        include: [
+          {
+            model: db.Menu,
+          },
+        ],
+        where: { order_id: req.query.order_id },
+      });
+      res.send(orderList);
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
 };
 module.exports = orderDetailsControllers;

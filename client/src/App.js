@@ -5,11 +5,11 @@ import { useEffect, useState } from "react";
 import { Center, Spinner } from "@chakra-ui/react";
 
 function App() {
-	return (
-		<>
-			<Routes>{routes.map((val) => val)}</Routes>
-		</>
-	);
+  return (
+    <>
+      <Routes>{routes.map((val) => val)}</Routes>
+    </>
+  );
 }
 
 export default App;
