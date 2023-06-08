@@ -2,7 +2,13 @@ import { Box, Center, Flex, Avatar, Button } from "@chakra-ui/react";
 import { TbSelect } from "react-icons/tb";
 export default function Sidebar() {
   return (
-    <Flex width="272px" height="130px" flexDir="column" h="100vh">
+    <Flex
+      width="272px"
+      height="100vh"
+      flexDir="column"
+      h="100vh"
+      background="#f9f5f6"
+    >
       <Center
         fontFamily="Nunito Sans"
         fontStyle="normal"
@@ -19,12 +25,7 @@ export default function Sidebar() {
         </Box>
       </Center>
 
-      <Center
-        flexDir="column"
-        justifyContent="start"
-        padding="10px"
-        background="#FFFEF7"
-      >
+      <Center flexDir="column" justifyContent="start" padding="10px">
         <Avatar></Avatar>
         <Box padding="10px">Bang Messi</Box>
 

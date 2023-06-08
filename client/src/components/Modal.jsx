@@ -14,7 +14,13 @@ export function ModalSelectQty(props) {
 
   const add = () => {
     const tempList = [];
-    tempList.push(order);
+    const tempQty = orderList.find((val) => val.name === order.name);
+    console.log(tempQty);
+    if (tempQty) {
+      tempQty.qty += order.qty;
+    } else {
+      tempList.push(order);
+    }
     setOrderList([...orderList, ...tempList]);
     console.log([...orderList, ...tempList]);
   };
