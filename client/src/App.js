@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Center, Spinner } from "@chakra-ui/react";
 
 function App() {
+
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -23,6 +24,7 @@ function App() {
       ) : (
         <Routes>{routes.map((val) => val)}</Routes>
       )}
+
     </>
   );
 }
