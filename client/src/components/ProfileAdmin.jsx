@@ -10,12 +10,13 @@ export default function ProfileAdmin() {
 	return (
 		<Flex
 			flexDir={"column"}
-			width={"auto"}
-			maxWidth={"1216px"}
+			w={"1168px"}
 			// width={"auto"}
 			height={"154px"}
+			marginLeft={"24px"}
 		>
 			<Box
+				bgColor={"white"}
 				height={"40%"}
 				display={"flex"}
 				justifyContent={"end"}
@@ -49,6 +50,7 @@ export default function ProfileAdmin() {
 				justifyContent={"space-between"}
 				alignItems={"center"}
 				padding={"0 16px"}
+				bgColor={"white"}
 			>
 				<Flex alignItems={"center"} fontSize={"18px"}>
 					<Icon fontSize={"28px"} as={MdOutlineSpaceDashboard} />

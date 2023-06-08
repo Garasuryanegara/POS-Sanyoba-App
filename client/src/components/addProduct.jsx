@@ -9,6 +9,7 @@ import {
   Select,
   Switch,
   Image,
+  Center,
 } from "@chakra-ui/react";
 import { HiOutlineUpload } from "react-icons/hi";
 import { useState, useRef, useEffect } from "react";
@@ -106,7 +107,7 @@ export default function AddProduct() {
   };
   return (
     <>
-      <Box
+      <Center
         display={"flex"}
         flexDir={"column"}
         alignItems={"flex-start"}
@@ -115,8 +116,7 @@ export default function AddProduct() {
         position={"absolute"}
         w={"1168px"}
         h={"1051px"}
-        left={"248"}
-        top={"178px"}
+        marginLeft={"24px"}
         borderRadius={"8px"}
         fontFamily={"Roboto"}
         fontStyle={"normal"}
@@ -131,7 +131,7 @@ export default function AddProduct() {
         {/* outlet */}
         <Flex alignItems={"center"} gap={"120px"} w={"703px"} h={"32px"}>
           <Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
-            Outlet<Flex color={"#D0011C"}>*</Flex>
+            Outlet
           </Flex>
           <Select
             fontStyle={"normal"}
@@ -209,8 +209,8 @@ export default function AddProduct() {
               flex={"none"}
               flexGrow={"1"}
             >
-              <Flex w={"60px"} h={"14px"} fontWeight={"400"}>
-                Basic Price
+              <Flex w={"65px"} h={"14px"} fontWeight={"400"}>
+                Basic Price<Flex color={"#D0011C"}>*</Flex>
               </Flex>
               <Input
                 className="input"
@@ -273,7 +273,7 @@ export default function AddProduct() {
           flexGrow={"0"}
         >
           <Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
-            Product Category
+            Product Category<Flex color={"#D0011C"}>*</Flex>
           </Flex>
           <Flex
             flexDir={"column"}
@@ -367,7 +367,7 @@ export default function AddProduct() {
               alignSelf={"stretch"}
               flexGrow={"0"}
             >
-              Product Photo
+              Product Photo<Flex color={"#D0011C"}>*</Flex>
             </Flex>
             <Flex
               w={"160px"}
@@ -498,7 +498,7 @@ export default function AddProduct() {
         >
           <Flex alignItems={"center"} gap={"120px"} w={"703px"} h={"32px"}>
             <Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
-              Stock Quantity<Flex color={"#D0011C"}>*</Flex>
+              Stock Quantity
             </Flex>
             <Input
               className="input"
@@ -594,7 +594,7 @@ export default function AddProduct() {
             </Button>
           </Box>
         </Box>
-      </Box>
+      </Center>
     </>
   );
 }

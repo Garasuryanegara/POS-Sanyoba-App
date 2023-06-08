@@ -3,6 +3,7 @@ const orderControllers = require("./order");
 const orderDetailsControllers = require("./orderDetail");
 const menuControllers = require("./menu");
 const categoryControllers = require("./category");
+const empControllers = require("./emp");
 
 module.exports = {
   userController,
@@ -10,4 +11,5 @@ module.exports = {
   orderDetailsControllers,
   menuControllers,
   categoryControllers,
+  empControllers,
 };
