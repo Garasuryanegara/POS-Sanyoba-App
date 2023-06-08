@@ -1,4 +1,6 @@
-import { useEffect } from "react";
+import { Center, Spinner } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 export default function ProtectedPage({
@@ -8,17 +10,34 @@ export default function ProtectedPage({
   needLogin,
   guestOnly,
 }) {
-  const user = JSON.parse(localStorage.getItem("auth"));
+  const userSelector = useSelector((state) => state.auth);
+  // const user = JSON.parse(localStorage.getItem("auth"));
+  const user = userSelector;
   const nav = useNavigate();
-  console.log(user);
+  // console.log(user);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (guestOnly && user?.role == "admin") {
-      return nav("/adminLand");
-    } else if (guestOnly && user?.role == "cashier") {
-      return nav("/cashierLnd");
-    } else if (needLogin && !user?.role) {
+    console.log(userSelector);
+
+    // if (guestOnly && user?.role == "admin") {
+    //   return nav("/adminLand");
+    // } else if (guestOnly && user?.role == "cashier") {
+    //   return nav("/cashierLnd");
+    // } else if (needLogin && !user?.role) {
+    //   return nav("/login");
+    // }
+
+    if (guestOnly && user.role) {
+      if (user.role == "admin") {
+        return nav("/adminLand");
+      } else {
+        return nav("/cashierland");
+      }
+    } else if (needLogin && !user.role) {
       return nav("/login");
+    } else if (needLogin && adminOnly && user.role != "admin") {
+      return nav("/cashierland");
     }
 
     // if (guestOnly && user?.role) {
@@ -39,5 +58,20 @@ export default function ProtectedPage({
     //   return nav("/login");
     // }
   }, []);
-  return children;
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, [userSelector]);
+
+  return (
+    <>
+      {isLoading ? (
+        <Center h={"100vh"}>
+          <Spinner />
+        </Center>
+      ) : (
+        children
+      )}
+    </>
+  );
 }

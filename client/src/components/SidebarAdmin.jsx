@@ -7,7 +7,13 @@ export default function SidebarAdmin() {
 
   try {
     return (
-      <Box left={0} top={0} position={"absolute"} zIndex={5} height={"100vh"}>
+      <Box
+        left={0}
+        top={0}
+        //  position={"absolute"}
+        zIndex={5}
+        // height={"100vh"}
+      >
         <Box
           width={"224px"}
           height={"158px"}

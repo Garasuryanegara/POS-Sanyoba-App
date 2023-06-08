@@ -9,6 +9,7 @@ app.use(express.json());
 const router = require("./routes");
 const db = require("./models");
 // db.sequelize.sync({ alter: true });
+// db.sequelize.sync({ force: true });
 
 app.use("/users", router.userRouter);
 app.use("/orders", router.orderRouter);

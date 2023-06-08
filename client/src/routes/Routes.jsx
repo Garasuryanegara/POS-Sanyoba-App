@@ -11,18 +11,18 @@ import Employee from "../pages/Employee";
 
 const routes = [
   <Route
-    path="/cashierLand"
+    path="/cashierland"
     element={
-      <ProtectedPage guestOnly={true} needLogin={true}>
+      <ProtectedPage needLogin={true}>
         <Homepage />
       </ProtectedPage>
     }
   ></Route>,
 
   <Route
-    path="/adminLand"
+    path="/adminland"
     element={
-      <ProtectedPage guestOnly={true} needLogin={true}>
+      <ProtectedPage needLogin={true} adminOnly={true}>
         <AdminPage />
       </ProtectedPage>
     }
@@ -31,17 +31,26 @@ const routes = [
   <Route
     path="/login"
     element={
-      <ProtectedPage guestOnly={false} needLogin={false}>
+      <ProtectedPage guestOnly={true}>
         <LoginPage />
       </ProtectedPage>
     }
   ></Route>,
-  <Route path="/addProduct" element={<AddProductPage />} />,
-  <Route path="/staff" element={<AddStaffPage />} />,
+
+  <Route
+    path="/staff"
+    element={
+      <ProtectedPage needLogin={true} adminOnly={true}>
+        <AddStaffPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+  <Route path="/addproduct" element={<AddProductPage />} />,
+  // <Route path="/staff" element={<AddStaffPage />} />,
   <Route path="/product" element={<ProductPage />} />,
 
   <Route path="/emp" element={<Employee />} />,
-  <Route path="/trxDetail" element={<TransactionDetailPage />}></Route>,
+  <Route path="/trx-detail" element={<TransactionDetailPage />}></Route>,
 ];
 
 export default routes;

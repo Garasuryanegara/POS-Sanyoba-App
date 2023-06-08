@@ -86,6 +86,8 @@ const userController = {
     try {
       let token = req.headers.authorization;
       token = token.split(" ")[1];
+      console.log(req.headers.authorization);
+      console.log("asdsa");
       let p = await db.Token.findOne({
         where: {
           [Op.and]: [
@@ -114,7 +116,7 @@ const userController = {
       next();
     } catch (error) {
       res.status(500).send({
-        message: err.message,
+        message: error.message,
       });
     }
   },
@@ -143,45 +145,7 @@ const userController = {
       });
     }
   },
-  getByToken: async (req, res, next) => {
-    try {
-      let token = req.headers.authorization;
-      token = token.split(" ")[1];
-      let p = await db.Token.findOne({
-        where: {
-          [Op.and]: [
-            {
-              token,
-            },
-            {
-              expired: {
-                [Op.gt]: moment("00:00:00", "hh:mm:ss").format(),
-                [Op.lte]: moment().add(1, "d").format(),
-              },
-            },
-          ],
-        },
-      });
-      if (!p) {
-        throw new Error("token has expired");
-      }
-      user = await db.User.findOne({
-        where: {
-          id: JSON.parse(p?.dataValues?.payload).id,
-        },
-      });
-      delete user.dataValues.password;
-      req.user = user;
-      next();
-    } catch (error) {
-      res.status(500).send({
-        message: err.message,
-      });
-    }
-  },
-  getUserByToken: async (req, res) => {
-    res.send(req.user);
-  },
+
   /// Admin handle Staff
   insertUser: async (req, res) => {
     try {
@@ -210,10 +174,14 @@ const userController = {
 
   getUser: async (req, res) => {
     try {
-      const { limit, offset, column, sort, search } = req.query;
+      const { limit, offset, column, sort, search, id } = req.query;
       const whereClause = {};
       let totalPages;
       let orderClause;
+
+      if (id) {
+        whereClause.id = id;
+      }
 
       if (search) {
         whereClause.name = {

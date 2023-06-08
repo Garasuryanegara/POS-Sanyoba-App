@@ -178,7 +178,7 @@ export default function AddStaff() {
             onChange={inputHandler}
           >
             <option value="admin">admin</option>
-            <option value="user">user</option>
+            <option value="cashier">cashier</option>
 
             {/* {categoryList.map((val) => (
               <option value={val.id}>{val.category}</option>
