@@ -470,9 +470,9 @@ export default function Employee() {
                                       w={"50%"}
                                       bgColor={"#D0011C	"}
                                       color={"white"}
-                                      onClick={() => {
-                                        deleteMenu(val);
-                                      }}
+                                      // onClick={() => {
+                                      //   deleteMenu(val);
+                                      // }}
                                     >
                                       Remove
                                     </Button>

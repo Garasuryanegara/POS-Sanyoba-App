@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../api/api";
 import { useDispatch } from "react-redux";
 import bgImage from "../assets/images/bgPOS.jpg";
-import Logo from "../assets/images/logo3a.png";
+// import Logo from "../assets/images/logo3a.png";
 
 export default function LoginPage() {
   const dispatch = useDispatch();
@@ -80,7 +80,7 @@ export default function LoginPage() {
         ></Flex>
 
         <Box
-          bgImage={Logo}
+          // bgImage={Logo}
           bgRepeat={"no-repeat"}
           bgPosition={"center"}
           h={"300px"}
