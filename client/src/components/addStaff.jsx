@@ -37,32 +37,27 @@ export default function AddStaff() {
   const formik = useFormik({
     initialValues: {
       name: "",
+      password: "",
+      role: "",
+      phone: "",
+      address: "",
       filename: "",
-      desc: "",
-      price: "",
-      category_id: "",
     },
     onSubmit: async () => {
-      const { name, filename, desc, price, category_id } = formik.values;
-      const product = new FormData();
+      const { name, password, role, phone, address, filename } = formik.values;
+      const staff = new FormData();
       console.log(filename);
-      product.append("productImg", filename);
-      product.append("name", name);
-      product.append("desc", desc);
-      product.append("price", price);
-      product.append("category_id", category_id);
+      staff.append("staffImg", filename);
+      staff.append("name", name);
+      staff.append("password", password);
+      staff.append("role", role);
+      staff.append("phone", phone);
+      staff.append("address", address);
 
-      // const product = {
-      // 	name,
-      // 	filename: formData,
-      // 	desc,
-      // 	price,
-      // 	category_id,
-      // };
-      const checkProduct = await api
-        .get("/menus/Draft", {
+      const checkStaff = await api
+        .get("/users", {
           params: {
-            nameCat: product.name,
+            search: staff.name,
           },
         })
         .then((res) => {
@@ -72,13 +67,15 @@ export default function AddStaff() {
             return false;
           }
         });
-      if (checkProduct) {
-        return alert("product already exist");
+      console.log(checkStaff);
+      if (checkStaff) {
+        return "staff already exist";
       } else {
-        console.log(product);
-        await api.post("/menus", product).then((res) => {
-          alert("product added");
-          nav("/product");
+        console.log(staff);
+        await api.post("/users", staff).then((res) => {
+          alert("staff added");
+          console.log(res.data);
+          // nav("/staff");
         });
       }
     },
@@ -86,6 +83,7 @@ export default function AddStaff() {
 
   async function inputHandler(event) {
     const { value, id } = event.target;
+    console.log({ id, value });
 
     formik.setFieldValue(id, value);
   }
@@ -126,13 +124,40 @@ export default function AddStaff() {
         color={"#353535"}
         background={"#ffff"}
       >
-        <Flex id="productInfo">Product Information</Flex>
+        <Flex id="staffInfo">Employee Information</Flex>
 
-        {/* outlet */}
         <Flex alignItems={"center"} gap={"120px"} w={"703px"} h={"32px"}>
           <Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
-            Outlet<Flex color={"#D0011C"}>*</Flex>
+            Name<Flex color={"#D0011C"}>*</Flex>
           </Flex>
+          <Input
+            className="input"
+            placeholder="staff name"
+            h={"32px"}
+            w={"423px"}
+            id="name"
+            onChange={inputHandler}
+          ></Input>
+        </Flex>
+        <Flex alignItems={"center"} gap={"120px"} w={"703px"} h={"32px"}>
+          <Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
+            Password<Flex color={"#D0011C"}>*</Flex>
+          </Flex>
+          <Input
+            className="input"
+            placeholder="password"
+            h={"32px"}
+            w={"423px"}
+            id="password"
+            onChange={inputHandler}
+          ></Input>
+        </Flex>
+        {/* product name */}
+        <Flex alignItems={"center"} gap={"120px"} w={"703px"} h={"32px"}>
+          <Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
+            Role<Flex color={"#D0011C"}>*</Flex>
+          </Flex>
+
           <Select
             fontStyle={"normal"}
             fontWeight={"500"}
@@ -148,38 +173,20 @@ export default function AddStaff() {
             h={"32px"}
             w={"423px"}
             borderRadius={"8px"}
-            placeholder="Choose your outlet"
-          />
-        </Flex>
-        {/* product name */}
-        <Flex alignItems={"center"} gap={"120px"} w={"703px"} h={"32px"}>
-          <Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
-            Product Name<Flex color={"#D0011C"}>*</Flex>
-          </Flex>
-          <Input
-            className="input"
-            placeholder="e.g. Chocolate Truffle Cake"
-            h={"32px"}
-            w={"423px"}
-            id="name"
+            placeholder="Choose the role"
+            id="role"
             onChange={inputHandler}
-          ></Input>
+          >
+            <option value="admin">admin</option>
+            <option value="user">user</option>
+
+            {/* {categoryList.map((val) => (
+              <option value={val.id}>{val.category}</option>
+            ))} */}
+          </Select>
         </Flex>
-        {/* product desc */}
-        <Flex alignItems={"flex-start"} gap={"120px"} w={"703px"} h={"107px"}>
-          <Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
-            Product Description
-          </Flex>
-          <Input
-            className="input"
-            placeholder="e.g. Best Seller"
-            h={"107px"}
-            w={"423px"}
-            id="desc"
-            onChange={inputHandler}
-          ></Input>
-        </Flex>
-        {/* price */}
+
+        {/* phone */}
         <Flex
           alignItems={"flex-start"}
           gap={"120px"}
@@ -189,7 +196,7 @@ export default function AddStaff() {
           flexGrow={"0"}
         >
           <Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
-            Price<Flex color={"#D0011C"}>*</Flex>
+            Phone<Flex color={"#D0011C"}>*</Flex>
           </Flex>
           <Flex
             flexDir={"row"}
@@ -209,132 +216,32 @@ export default function AddStaff() {
               flex={"none"}
               flexGrow={"1"}
             >
-              <Flex w={"60px"} h={"14px"} fontWeight={"400"}>
-                Basic Price
-              </Flex>
               <Input
                 className="input"
-                placeholder="e.g. Rp 30.000"
+                placeholder="phone number"
                 h={"32px"}
                 w={"269.33px"}
-                id="price"
+                id="phone"
                 onChange={inputHandler}
               ></Input>
             </Flex>
-            <Flex
-              flexDir={"column"}
-              alignItems={"flex-start"}
-              gap={"4px"}
-              w={"269.33px"}
-              h={"50px"}
-              flex={"none"}
-              flexGrow={"1"}
-            >
-              <Flex w={"60px"} h={"14px"} fontWeight={"400"}>
-                Sales Price
-              </Flex>
-              <Input
-                className="input"
-                placeholder="e.g. Rp 30.000"
-                h={"32px"}
-                w={"269.33px"}
-              ></Input>
-            </Flex>
-            <Flex
-              flexDir={"column"}
-              alignItems={"flex-start"}
-              gap={"4px"}
-              w={"269.33px"}
-              h={"50px"}
-              flex={"none"}
-              flexGrow={"1"}
-            >
-              <Flex h={"14px"} fontWeight={"400"}>
-                Minimum Sales Quantity
-              </Flex>
-              <Input
-                className="input"
-                placeholder="e.g. 1"
-                h={"32px"}
-                w={"269.33px"}
-              ></Input>
-            </Flex>
           </Flex>
         </Flex>
-        {/* product category */}
-        <Flex
-          flexDir={"row"}
-          alignItems={"flex-start"}
-          gap={"120px"}
-          w={"1136px"}
-          h={"72px"}
-          flex={"none"}
-          alignSelf={"stretch"}
-          flexGrow={"0"}
-        >
+        <Flex alignItems={"flex-start"} gap={"120px"} w={"703px"} h={"107px"}>
           <Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
-            Product Category
+            Address
           </Flex>
-          <Flex
-            flexDir={"column"}
-            alignItems={"flex-start"}
-            gap={"8px"}
+          <Input
+            className="input"
+            placeholder="Staff Address"
+            h={"107px"}
             w={"423px"}
-            h={"72px"}
-            flex={"none"}
-            flexGrow={"0"}
-          >
-            <Select
-              fontStyle={"normal"}
-              fontWeight={"500"}
-              fontSize={"12px"}
-              lineHeight={"14px"}
-              className="select"
-              boxSizing="border-box"
-              display={"flex"}
-              flexDir={"row"}
-              justifyContent={"space-between"}
-              alignItems={"center"}
-              gap={"202px"}
-              h={"32px"}
-              w={"423px"}
-              borderRadius={"8px"}
-              placeholder="Choose category"
-              id="category_id"
-              onChange={inputHandler}
-            >
-              {categoryList.map((val) => (
-                <option value={val.id}>{val.category}</option>
-              ))}
-            </Select>
-
-            <Button
-              display={"flex"}
-              flexDir={"row"}
-              justifyContent={"center"}
-              alignItems={"center"}
-              padding={"0px 8px"}
-              gap={"4px"}
-              w={"423px"}
-              h={"32px"}
-              colorScheme="white"
-              color={"#45BB71"}
-              border={"1px solid #45BB71"}
-              borderRadius={"4px"}
-              flex={"none"}
-              alignSelf={"stretch"}
-              flexGrow={"0"}
-              fontFamily={"roboto"}
-              fontStyle={"normal"}
-              fontWeight={"400"}
-              fontSize={"12px"}
-              lineHeight={"14px"}
-            >
-              + Add Variant
-            </Button>
-          </Flex>
+            id="address"
+            onChange={inputHandler}
+          ></Input>
         </Flex>
-        {/* product photo */}
+
+        {/* staff photo */}
         <Flex
           flexDir={"row"}
           alignItems={"flex-start"}
@@ -367,7 +274,7 @@ export default function AddStaff() {
               alignSelf={"stretch"}
               flexGrow={"0"}
             >
-              Product Photo
+              Staff Photo
             </Flex>
             <Flex
               w={"160px"}
@@ -464,51 +371,8 @@ export default function AddStaff() {
             )}
           </>
         </Flex>
-        {/* sku */}
-        <Flex
-          flexDir={"row"}
-          alignItems={"flex-start"}
-          gap={"120px"}
-          w={"703px"}
-          h={"32px"}
-          flex={"none"}
-          flexGrow={"0"}
-        >
-          <Flex alignItems={"center"} gap={"120px"} w={"703px"} h={"32px"}>
-            <Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
-              SKU (Stock Keeping Unit)
-            </Flex>
-            <Input
-              className="input"
-              placeholder="e.g. CAK001"
-              h={"32px"}
-              w={"423px"}
-            ></Input>
-          </Flex>
-        </Flex>
-        {/* stock qty */}
-        <Flex
-          flexDir={"row"}
-          alignItems={"flex-start"}
-          gap={"120px"}
-          w={"703px"}
-          h={"32px"}
-          flex={"none"}
-          flexGrow={"0"}
-        >
-          <Flex alignItems={"center"} gap={"120px"} w={"703px"} h={"32px"}>
-            <Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
-              Stock Quantity<Flex color={"#D0011C"}>*</Flex>
-            </Flex>
-            <Input
-              className="input"
-              placeholder="e.g. 120"
-              h={"32px"}
-              w={"423px"}
-            ></Input>
-          </Flex>
-        </Flex>
-        {/* stock alert */}
+
+        {/* super admin */}
         <Flex alignItems={"center"} gap={"120px"} w={"703px"} h={"50px"}>
           <Flex
             flexDir={"column"}
@@ -517,10 +381,10 @@ export default function AddStaff() {
             gap={"8px"}
           >
             <Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
-              Stock Alert
+              Super Admin
             </Flex>
             <Flex w={"160px"} h={"28px"} color={"rgba(53, 53, 53, 0.6)"}>
-              Activate stock alert to get the stock monitoring.
+              Activate super admin to get the full access to all features
             </Flex>
           </Flex>
           <Switch />

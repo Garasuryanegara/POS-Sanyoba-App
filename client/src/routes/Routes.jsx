@@ -4,12 +4,13 @@ import AddProductPage from "../pages/AddProductPage";
 import ProductPage from "../pages/ProductPage";
 import AdminPage from "../pages/AdminLandingPage";
 import TransactionDetailPage from "../pages/TransactionDetailPage";
+import AddStaffPage from "../pages/AddStaffPage";
 
 const routes = [
   <Route path="/cashier" element={<Homepage />} />,
   <Route path="/admin" element={<AdminPage />}></Route>,
   <Route path="/addProduct" element={<AddProductPage />} />,
-  <Route path="/staff" element={<AddProductPage />} />,
+  <Route path="/staff" element={<AddStaffPage />} />,
   <Route path="/product" element={<ProductPage />} />,
   <Route path="/trxDetail" element={<TransactionDetailPage />}></Route>,
 ];

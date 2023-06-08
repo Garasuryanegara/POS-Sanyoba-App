@@ -4,7 +4,7 @@ import SidebarAdmin from "../components/SidebarAdmin";
 import ProfileAdmin from "../components/ProfileAdmin";
 import AddStaff from "../components/addStaff";
 
-export default function AddProductPage() {
+export default function AddStaffPage() {
   return (
     <>
       <Box backgroundColor={"#F1F1F1"} height={"100vh"} width={"100vw"}>

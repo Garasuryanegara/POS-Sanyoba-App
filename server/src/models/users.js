@@ -9,7 +9,7 @@ module.exports = (sequelize, Sequelize) => {
       role: Sequelize.ENUM("admin", "user"),
       active: {
         type: Sequelize.BOOLEAN,
-        defaultValue: true,
+        defaultValue: false,
         allowNull: false,
       },
       img_url: {
