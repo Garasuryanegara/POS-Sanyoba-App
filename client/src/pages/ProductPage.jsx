@@ -1,11 +1,9 @@
 import Product from "../components/product";
-import { Container, Box, Center } from "@chakra-ui/react";
-import SidebarAdmin from "../components/SidebarAdmin";
-import ProfileAdmin from "../components/ProfileAdmin";
 
-export default function ProductPage() {
+export default function AddProductPage() {
 	return (
 		<>
+
 			<Center>
 				<Box backgroundColor={"#F1F1F1"} w={"1440px"}>
 					<Container maxW={"1440px"} padding={"0"}>
@@ -19,6 +17,7 @@ export default function ProductPage() {
 					</Container>
 				</Box>
 			</Center>
+
 		</>
 	);
 }
