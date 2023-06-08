@@ -7,7 +7,7 @@ export default function SidebarAdmin() {
 
   try {
     return (
-      <Box left={0} height={"100vh"}>
+      <Box left={0} top={0} position={"absolute"} zIndex={5} height={"100vh"}>
         <Box
           width={"224px"}
           height={"158px"}
@@ -83,7 +83,10 @@ export default function SidebarAdmin() {
               <Box
                 width={"224px"}
                 height={"40px"}
-                _hover={{ cursor: "pointer", background: "#DCFFE2" }}
+                _hover={{
+                  cursor: "pointer",
+                  background: "#DCFFE2",
+                }}
               >
                 <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
                   Sales Transaction Data
@@ -92,7 +95,10 @@ export default function SidebarAdmin() {
               <Box
                 width={"224px"}
                 height={"40px"}
-                _hover={{ cursor: "pointer", background: "#DCFFE2" }}
+                _hover={{
+                  cursor: "pointer",
+                  background: "#DCFFE2",
+                }}
               >
                 <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
                   Sales Product
@@ -101,7 +107,10 @@ export default function SidebarAdmin() {
               <Box
                 width={"224px"}
                 height={"40px"}
-                _hover={{ cursor: "pointer", background: "#DCFFE2" }}
+                _hover={{
+                  cursor: "pointer",
+                  background: "#DCFFE2",
+                }}
               >
                 <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
                   Daily Sales Report
@@ -110,7 +119,10 @@ export default function SidebarAdmin() {
               <Box
                 width={"224px"}
                 height={"40px"}
-                _hover={{ cursor: "pointer", background: "#DCFFE2" }}
+                _hover={{
+                  cursor: "pointer",
+                  background: "#DCFFE2",
+                }}
               >
                 <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
                   Sales Per Outlet
@@ -119,7 +131,10 @@ export default function SidebarAdmin() {
               <Box
                 width={"224px"}
                 height={"40px"}
-                _hover={{ cursor: "pointer", background: "#DCFFE2" }}
+                _hover={{
+                  cursor: "pointer",
+                  background: "#DCFFE2",
+                }}
               >
                 <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
                   Sales Per Category
@@ -128,7 +143,10 @@ export default function SidebarAdmin() {
               <Box
                 width={"224px"}
                 height={"40px"}
-                _hover={{ cursor: "pointer", background: "#DCFFE2" }}
+                _hover={{
+                  cursor: "pointer",
+                  background: "#DCFFE2",
+                }}
               >
                 <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
                   Sales Per Custommer
@@ -153,7 +171,10 @@ export default function SidebarAdmin() {
               <Box
                 width={"224px"}
                 height={"40px"}
-                _hover={{ cursor: "pointer", background: "#DCFFE2" }}
+                _hover={{
+                  cursor: "pointer",
+                  background: "#DCFFE2",
+                }}
               >
                 <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
                   Product
@@ -162,7 +183,10 @@ export default function SidebarAdmin() {
               <Box
                 width={"224px"}
                 height={"40px"}
-                _hover={{ cursor: "pointer", background: "#DCFFE2" }}
+                _hover={{
+                  cursor: "pointer",
+                  background: "#DCFFE2",
+                }}
               >
                 <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
                   Inventory
@@ -171,7 +195,10 @@ export default function SidebarAdmin() {
               <Box
                 width={"224px"}
                 height={"40px"}
-                _hover={{ cursor: "pointer", background: "#DCFFE2" }}
+                _hover={{
+                  cursor: "pointer",
+                  background: "#DCFFE2",
+                }}
               >
                 <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
                   Procurement
@@ -196,7 +223,10 @@ export default function SidebarAdmin() {
               <Box
                 width={"224px"}
                 height={"40px"}
-                _hover={{ cursor: "pointer", background: "#DCFFE2" }}
+                _hover={{
+                  cursor: "pointer",
+                  background: "#DCFFE2",
+                }}
               >
                 <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
                   Outlet
@@ -205,7 +235,10 @@ export default function SidebarAdmin() {
               <Box
                 width={"224px"}
                 height={"40px"}
-                _hover={{ cursor: "pointer", background: "#DCFFE2" }}
+                _hover={{
+                  cursor: "pointer",
+                  background: "#DCFFE2",
+                }}
               >
                 <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
                   Employee
@@ -214,7 +247,10 @@ export default function SidebarAdmin() {
               <Box
                 width={"224px"}
                 height={"40px"}
-                _hover={{ cursor: "pointer", background: "#DCFFE2" }}
+                _hover={{
+                  cursor: "pointer",
+                  background: "#DCFFE2",
+                }}
               >
                 <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
                   Customer
@@ -223,7 +259,10 @@ export default function SidebarAdmin() {
               <Box
                 width={"224px"}
                 height={"40px"}
-                _hover={{ cursor: "pointer", background: "#DCFFE2" }}
+                _hover={{
+                  cursor: "pointer",
+                  background: "#DCFFE2",
+                }}
               >
                 <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
                   Comission
