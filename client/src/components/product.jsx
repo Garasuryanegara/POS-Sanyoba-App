@@ -23,6 +23,7 @@ import {
 	ModalHeader,
 	ModalBody,
 	ModalFooter,
+	Center,
 } from "@chakra-ui/react";
 import {
 	MdArrowDropUp,
@@ -49,7 +50,7 @@ export default function Product() {
 
 	async function deleteMenu(val) {
 		await api.delete("/menus/" + val.id);
-		alert("Product deleted");
+		// alert("Product deleted");
 		getAll();
 	}
 
@@ -62,7 +63,7 @@ export default function Product() {
 
 	return (
 		<>
-			<Box
+			<Center
 				background={"#FFFFFF"}
 				display={"flex"}
 				flexDir={"column"}
@@ -72,8 +73,7 @@ export default function Product() {
 				position={"absolute"}
 				w={"1168px"}
 				h={"634px"}
-				left={"248px"}
-				top={"150px"}
+				marginLeft={"24px"}
 				borderRadius={"8px"}
 				fontFamily={"Roboto"}
 				fontStyle={"normal"}
@@ -81,7 +81,6 @@ export default function Product() {
 				fontSize={"1px"}
 				lineHeight={"14px"}
 				color={"#353535"}
-				// border={"1px"}
 			>
 				<Box
 					display={"flex"}
@@ -497,6 +496,9 @@ export default function Product() {
 																		onClose
 																	}
 																	id={val.id}
+																	getAll={
+																		getAll
+																	}
 																/>
 															) : null}
 														</ModalContent>
@@ -662,7 +664,7 @@ export default function Product() {
 						</Flex>
 					</Flex>
 				</Box>
-			</Box>
+			</Center>
 		</>
 	);
 }
