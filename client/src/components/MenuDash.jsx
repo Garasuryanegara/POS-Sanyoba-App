@@ -14,7 +14,6 @@ export default function MenuDash() {
 
   const handleChange = (e) => {
     setDate(e.target.value);
-    console.log(date);
   };
 
   async function fetch1() {
@@ -37,10 +36,6 @@ export default function MenuDash() {
     setCountOrder(data1.data.count);
   }
 
-  // useEffect(() => {
-  //   console.log(data);
-  // }, []);
-
   useEffect(() => {
     fetch1();
   }, [date]);
@@ -55,7 +50,6 @@ export default function MenuDash() {
       >
         <Flex flexDir={"column"} fontSize={"12px"}>
           <Text color={"rgba(53, 53, 53, 0.6);"}>Outlet</Text>
-
           <Select
             width={"340px"}
             height={"40px"}

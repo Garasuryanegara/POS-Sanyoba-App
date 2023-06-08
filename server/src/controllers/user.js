@@ -32,15 +32,16 @@ const userController = {
   },
   login: async (req, res) => {
     try {
-      const { emna, password } = req.query;
+      const { role, name, password } = req.body;
+      console.log(req.body);
       const user = await db.User.findOne({
         where: {
-          [Op.or]: [
+          [Op.and]: [
             {
-              email: emna,
+              name,
             },
             {
-              name: emna,
+              role,
             },
           ],
         },
@@ -48,13 +49,17 @@ const userController = {
       if (user) {
         const match = await bcrypt.compare(password, user.dataValues.password);
         console.log(match);
+        console.log(user.dataValues);
         if (match) {
           const payload = {
             id: user.dataValues.id,
           };
+
+          const generateToken = nanoid();
+
           const token = await db.Token.create({
             expired: moment().add(1, "days").format(),
-            token: nanoid(),
+            token: generateToken,
             payload: JSON.stringify(payload),
             valid: true,
           });
@@ -117,6 +122,133 @@ const userController = {
     res.send(req.user);
   },
   uploadAvatar: async (req, res) => {
+    try {
+      const buffer = await sharp(req.file.buffer)
+        .resize(250, 250)
+        .png()
+        .toBuffer();
+      await db.User.create({
+        name,
+        phone,
+        address,
+        password: hashPassword,
+        role,
+      });
+      return await db.User.findAll().then((result) => {
+        res.send(result);
+      });
+    } catch (err) {
+      return res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+  getByToken: async (req, res, next) => {
+    try {
+      let token = req.headers.authorization;
+      token = token.split(" ")[1];
+      let p = await db.Token.findOne({
+        where: {
+          [Op.and]: [
+            {
+              token,
+            },
+            {
+              expired: {
+                [Op.gt]: moment("00:00:00", "hh:mm:ss").format(),
+                [Op.lte]: moment().add(1, "d").format(),
+              },
+            },
+          ],
+        },
+      });
+      if (!p) {
+        throw new Error("token has expired");
+      }
+      user = await db.User.findOne({
+        where: {
+          id: JSON.parse(p?.dataValues?.payload).id,
+        },
+      });
+      delete user.dataValues.password;
+      req.user = user;
+      next();
+    } catch (error) {
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+  getUserByToken: async (req, res) => {
+    res.send(req.user);
+  },
+  /// Admin handle Staff
+  insertUser: async (req, res) => {
+    try {
+      const { name, phone, address, password, role } = req.body;
+      const { filename } = req.file;
+      console.log(req.body);
+      // console.log(req.file);
+      const hashPassword = await bcrypt.hash(password, 10);
+      await db.User.create({
+        name,
+        phone,
+        address,
+        password: hashPassword,
+        role,
+        img_url: process.env.url_img + filename,
+      }).then((result) => res.send(result));
+      // await db.User.findAll().then((result) => {
+      // res.send(result);
+      // });
+    } catch (err) {
+      return res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
+  getUser: async (req, res) => {
+    try {
+      const { limit, offset, column, sort, search } = req.query;
+      const whereClause = {};
+      let totalPages;
+      let orderClause;
+
+      if (search) {
+        whereClause.name = {
+          [Op.like]: `%${search}%`,
+        };
+      }
+      if (column) {
+        orderClause = [[column, sort]];
+      }
+      if (limit) {
+        const totalCount = await db.User.count({
+          where: whereClause,
+        });
+        totalPages = Math.ceil(totalCount / limit);
+      }
+
+      const users = await db.User.findAll({
+        where: whereClause,
+        order: orderClause,
+        limit: limit ? Number(limit) : null,
+        offset: offset ? Number(offset) : null,
+      });
+      res.send({
+        Users: users,
+        totalPages: totalPages,
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+  ////
+  uploadAvatar: async (req, res) => {
     const buffer = await sharp(req.file.buffer)
       .resize(250, 250)
       .png()
@@ -128,36 +260,6 @@ const userController = {
       req.get("host") +
       "/Users/image/render/" +
       req.params.id;
-
-    await db.User.update(
-      {
-        avatar_url: fulUrl,
-        avatar_blob: buffer,
-      },
-      {
-        where: {
-          id: req.params.id,
-        },
-      }
-    );
-    res.send("uploaded");
-  },
-  renderAvatar: async (req, res) => {
-    try {
-      await db.User.findOne({
-        where: {
-          id: req.params.id,
-        },
-      }).then((result) => {
-        res.set("Content-type", "image/png");
-        res.send(result.dataValues.avatar_blob);
-      });
-    } catch (err) {
-      return res.send({
-        message: err.message,
-      });
-    }
   },
 };
-
 module.exports = userController;
