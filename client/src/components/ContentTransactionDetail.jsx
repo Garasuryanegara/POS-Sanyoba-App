@@ -102,7 +102,7 @@ export default function ContentFlexansactionDetail() {
           alignItems={"center"}
         >
           <Flex w={"100%"} justifyContent={"space-between"}>
-            <Link to={"/cashier"}>
+            <Link to={"/cashierLand"}>
               <Flex w={"20px"} alignItems={"center"}>
                 <HiOutlineArrowLeft fontSize={"24px"} />
               </Flex>
@@ -261,7 +261,7 @@ export default function ContentFlexansactionDetail() {
                 fontSize={"16px"}
                 color={"white"}
                 bg={"#369A64"}
-                onClick={charge}
+                onClick={input > totalAmount ? charge : null}
               >
                 Charge
               </Center>

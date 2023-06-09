@@ -1,7 +1,7 @@
 import { Box, Center, Container } from "@chakra-ui/react";
 import AddProduct from "../components/addProduct";
-import ProfileAdmin from "../components/ProfileAdmin";
 import SidebarAdmin from "../components/SidebarAdmin";
+import ProfileAdmin from "../components/ProfileAdmin";
 
 export default function AddProductPage() {
   return (
