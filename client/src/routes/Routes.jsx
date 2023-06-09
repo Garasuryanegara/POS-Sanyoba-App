@@ -7,7 +7,7 @@ import TransactionDetailPage from "../pages/TransactionDetailPage";
 import AddStaffPage from "../pages/AddStaffPage";
 import ProtectedPage from "./ProtectedPage";
 import LoginPage from "../pages/LoginPage";
-import Employee from "../pages/Employee";
+import AddEmployeePage from "../pages/Employee";
 
 const routes = [
   <Route
@@ -49,7 +49,7 @@ const routes = [
   // <Route path="/staff" element={<AddStaffPage />} />,
   <Route path="/product" element={<ProductPage />} />,
 
-  <Route path="/emp" element={<Employee />} />,
+  <Route path="/emp" element={<AddEmployeePage />} />,
   <Route path="/trx-detail" element={<TransactionDetailPage />}></Route>,
 ];
 

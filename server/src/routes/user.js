@@ -14,25 +14,6 @@ router.post(
 
 router.post("/login", userController.login);
 router.get("/token", userController.getByToken, userController.getUserByToken);
-
-// employee
-
-router.get("/", empControllers.getMenu);
-router.get("/Draft", empControllers.getMenuDraft);
-router.get("/all", empControllers.getAll);
-router.delete("/:id", empControllers.deleteMenu);
-router.patch("/:id", empControllers.editMenu);
-router.post(
-  "/",
-  fileUploader({ destinationFolder: "empImg" }).single("empImg"),
-  empControllers.insertUser
-);
-router.patch(
-  "/:id",
-  fileUploader({
-    destinationFolder: "empImg",
-  }).single("empImg"),
-  empControllers.editMenu
-);
+router.delete("/:id", userController.deleteUser);
 
 module.exports = router;
