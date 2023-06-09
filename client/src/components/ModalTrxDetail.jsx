@@ -179,7 +179,7 @@ export default function ModalTrxDetail(props) {
             color={"white"}
             bg={"#369A64"}
             onClick={() => {
-              nav("/cashier");
+              nav("/cashierLand");
             }}
           >
             Done

@@ -2,10 +2,14 @@ import { Box, Center, Flex, Avatar, Button, Icon } from "@chakra-ui/react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { RxDividerVertical } from "react-icons/rx";
 import Sidebar from "./sidebar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const [side, setSide] = useState(false);
+  const userSelector = useSelector((state) => state.auth);
+  const nav = useNavigate();
   return (
     <Box>
       <Flex
@@ -45,13 +49,21 @@ export default function Navbar() {
           </Box>
           <RxDividerVertical />
           <Box>
-            <Box>Bang Messi</Box>
+            <Box>{userSelector.name}</Box>
           </Box>
           <Box>
             <Box>(Cashier)</Box>
           </Box>
           <Box padding="15px">
-            <Button width="60px" height="25px" color="#45BB71">
+            <Button
+              width="60px"
+              height="25px"
+              color="#45BB71"
+              onClick={() => {
+                localStorage.removeItem("auth");
+                nav("/login");
+              }}
+            >
               Logout
             </Button>
           </Box>

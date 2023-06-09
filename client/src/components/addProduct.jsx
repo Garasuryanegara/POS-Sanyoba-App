@@ -67,6 +67,7 @@ export default function AddProduct() {
           },
         })
         .then((res) => {
+          // console.log(res.data);
           if (res.data.length) {
             return true;
           } else {

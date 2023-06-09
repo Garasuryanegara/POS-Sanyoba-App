@@ -12,7 +12,9 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
+  Spinner,
 } from "@chakra-ui/react";
+import load from "../assets/images/load.gif";
 import { FiSearch } from "react-icons/fi";
 import { BsUpcScan, BsCardList } from "react-icons/bs";
 import { SlOptions } from "react-icons/sl";
@@ -38,7 +40,7 @@ export default function ContentCashier() {
 
   const handleObjectValue = async (val) => {
     console.log(val);
-    setOrder({ ...order, name: val.name, price: val.price, id: val.id }); //jangan lupa price: val.price
+    setOrder({ ...order, name: val.name, price: val.price, id: val.id });
     console.log({ ...order, name: val.name, price: val.price, id: val.id });
     console.log(orderList.length);
   };
@@ -46,16 +48,19 @@ export default function ContentCashier() {
   // fetch all menu
   const [menu, setMenu] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
+  const [totalCount, setTotalCount] = useState();
+  const [loading, setLoading] = useState(false);
   const fetchMenu = async (category_id) => {
+    setLoading(true);
     await api
       .get(`/menus`, { params: { limit: cont, category_id } })
       .then((res) => {
         console.log(res.data);
         setMenu(res.data.menus);
-        if (cont >= res.data.totalCount) {
-          // console.log("udh penuh tolol");
-        }
-        console.log(cont);
+        setTotalCount(res.data.count);
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
       });
   };
 
@@ -114,7 +119,7 @@ export default function ContentCashier() {
         console.log(result);
       });
     });
-    nav("/trxDetail");
+    nav("/trx-detail");
   };
 
   return (
@@ -212,94 +217,107 @@ export default function ContentCashier() {
                     onClick={(e) => {
                       setMmk(val.id);
                       handleClick(e);
+                      console.log(totalCount);
                     }}
                   >
                     {val.category}
                   </Center>
                 ))}
               </Box>
-
-              <Box overflow="scroll">
-                <Box
-                  // bgColor={"blue"}
-                  maxW="660px"
-                  w="100%"
-                  h="570px"
-                  marginTop="24px"
-                  display="grid"
-                  gridGap="32px"
-                  gridColumnGap="24px"
-                  css={{
-                    "&::-webkit-scrollbar": {
-                      display: "none",
-                    },
-                  }}
-                  gridTemplateColumns={{
-                    base: "repeat(auto-fill, minmax(0, 1fr))",
-                    md: "repeat(3, 1fr)", // adjust the number of columns as needed for different screen sizes
-                  }}
-                  gridTemplateRows={{
-                    base: "repeat(auto-fill, minmax(0, 1fr))",
-                    md: "repeat(4, 1fr)", // adjust the number of rows as needed for different screen sizes
-                  }}
-                >
-                  {menu
-                    .filter((val) => {
-                      if (search == "") {
-                        return val;
-                      } else if (
-                        val.name.toLowerCase().includes(search.toLowerCase())
-                      ) {
-                        return val;
-                      }
-                    })
-                    .map((val) => (
-                      <>
-                        <Box
-                          backgroundImage={`url('${val.img_url}')`}
-                          backgroundSize={"100% 100%"}
-                          w={"204px"}
-                          h={"146px"}
-                          borderRadius={"8px"}
-                          alignContent={"flex-end"}
-                          // marginTop={"32px"}
-                          cursor={"pointer"}
-                          display={"grid"}
-                          id="name"
-                          onClick={() => {
-                            onOpen();
-                            handleObjectValue(val);
-                          }}
-                        >
-                          <Center
+              {loading ? (
+                <Center maxW="660px" w="100%" h="570px" marginTop="24px">
+                  <Image src={load} />
+                </Center>
+              ) : (
+                <Box overflow="scroll">
+                  <Box
+                    // bgColor={"blue"}
+                    maxW="660px"
+                    w="100%"
+                    h="570px"
+                    marginTop="24px"
+                    display="grid"
+                    gridGap="32px"
+                    gridColumnGap="24px"
+                    css={{
+                      "&::-webkit-scrollbar": {
+                        display: "none",
+                      },
+                    }}
+                    gridTemplateColumns={{
+                      base: "repeat(auto-fill, minmax(0, 1fr))",
+                      md: "repeat(3, 1fr)", // adjust the number of columns as needed for different screen sizes
+                    }}
+                    gridTemplateRows={{
+                      base: "repeat(auto-fill, minmax(0, 1fr))",
+                      md: "repeat(4, 1fr)", // adjust the number of rows as needed for different screen sizes
+                    }}
+                  >
+                    {menu
+                      .filter((val) => {
+                        if (search == "") {
+                          return val;
+                        } else if (
+                          val.name.toLowerCase().includes(search.toLowerCase())
+                        ) {
+                          return val;
+                        }
+                      })
+                      .map((val) => (
+                        <>
+                          <Box
+                            backgroundImage={`url('${val.img_url}')`}
+                            backgroundSize={"100% 100%"}
                             w={"204px"}
-                            h={"35px"}
-                            bg={"rgba(29, 94, 72, 0.85)"}
-                            // alignItems={"flex-end"}
-                            fontFamily={"roboto"}
-                            fontWeight={"500"}
-                            color={"white"}
-                            borderBottomRadius={"8px"}
+                            h={"146px"}
+                            borderRadius={"8px"}
+                            alignContent={"flex-end"}
+                            // marginTop={"32px"}
+                            cursor={"pointer"}
+                            display={"grid"}
+                            id="name"
+                            onClick={() => {
+                              onOpen();
+                              handleObjectValue(val);
+                            }}
                           >
-                            {val.name}
-                          </Center>
-                        </Box>
-                      </>
-                    ))}
-                  <Center>
-                    <Button
-                      bg={"#369A64"}
-                      color={"white"}
-                      onClick={() => {
-                        setCont(cont + 9);
-                        // console.log(cont);
-                      }}
-                    >
-                      More Meals
-                    </Button>
-                  </Center>
+                            <Center
+                              w={"204px"}
+                              h={"35px"}
+                              bg={"rgba(29, 94, 72, 0.85)"}
+                              // alignItems={"flex-end"}
+                              fontFamily={"roboto"}
+                              fontWeight={"500"}
+                              color={"white"}
+                              borderBottomRadius={"8px"}
+                            >
+                              {val.name}
+                            </Center>
+                          </Box>
+                        </>
+                      ))}
+                    <Center>
+                      <Button
+                        bg={"#369A64"}
+                        color={"white"}
+                        onClick={() => {
+                          setCont(cont + 9);
+                          // console.log(cont);
+                        }}
+                        opacity={
+                          totalCount > 9 && cont <= totalCount ? "100%" : "0%"
+                        }
+                        pointerEvents={
+                          totalCount > 9 && cont <= totalCount ? "auto" : "none"
+                        }
+                        // transition="opacity 3.5s linear"
+                      >
+                        More Meals
+                      </Button>
+                    </Center>
+                  </Box>
                 </Box>
-              </Box>
+              )}
             </Box>
             <Box maxW={"510px"} w={"100%"} h={"700px"} padding={"0px 24px"}>
               <Flex
