@@ -1,7 +1,7 @@
 import { Box, Center, Container } from "@chakra-ui/react";
-// import Product from "../components/product";
 import SidebarAdmin from "../components/SidebarAdmin";
 import ProfileAdmin from "../components/ProfileAdmin";
+import Employee from "../components/employee";
 
 export default function AddEmployeePage() {
   return (
@@ -13,7 +13,7 @@ export default function AddEmployeePage() {
               <SidebarAdmin></SidebarAdmin>
               <Box width={"100%"}>
                 <ProfileAdmin />
-                {/* <Product /> */}
+                <Employee />
               </Box>
             </Box>
           </Container>
