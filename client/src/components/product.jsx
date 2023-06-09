@@ -42,23 +42,71 @@ export default function Product() {
 	const [menu, setMenu] = useState([]);
 	const [kobel, setKobel] = useState(true);
 	const { isOpen, onOpen, onClose } = useDisclosure();
+	const [search, setSearch] = useState("");
+	const [categoryList, setCategoryList] = useState([]);
+	const [filter, setFilter] = useState({});
+	const [sort, setSort] = useState({});
 
-	console.log(menu);
+	useEffect(() => {
+		categoryId();
+	}, []);
+
+	const categoryId = async () => {
+		await api.get("/categories", categoryList).then((res) => {
+			setCategoryList(res.data);
+		});
+	};
+
 	useEffect(() => {
 		getAll();
 	}, []);
 
 	async function deleteMenu(val) {
 		await api.delete("/menus/" + val.id);
-		// alert("Product deleted");
 		getAll();
 	}
+	// useEffect(() => {
+	// 	if (category_id) getAll(categoryId);
+	// }, [category_id]);
+	useEffect(() => {
+		if (filter) {
+			getAll();
+		}
+	}, [filter]);
+	function sortHandler(column) {
+		// e.stopPropagation();
+
+		console.log(column);
+		// setSort({ ...column });
+		setFilter({ ...filter, ...column });
+
+		// const curentSort = sort[name] || "DESC";
+		// const newSort = curentSort === "ASC" ? "DESC" : "ASC";
+		// setSort({
+		// 	[name]: filter[column.name],
+		// 	[name]: column,
+		// });
+	}
+	function valueHandler(e) {
+		const tempObj = {};
+		tempObj[e.target.id] = e.target.value;
+		console.log(tempObj);
+		setFilter({ ...filter, ...tempObj });
+	}
+	useEffect(() => {
+		console.log(sort);
+		setFilter({ ...filter, ...sort });
+	}, [sort]);
 
 	async function getAll() {
-		await api.get("/menus/all").then((res) => {
-			console.log(res.data);
-			setMenu(res.data);
-		});
+		await api
+			.get("/menus/Draft", {
+				params: filter,
+			})
+			.then((res) => {
+				console.log(res.data.menus);
+				setMenu(res.data.menus);
+			});
 	}
 
 	return (
@@ -125,7 +173,13 @@ export default function Product() {
 						border={"1px solid rgba(53, 53, 53, 0.3)"}
 						borderRadius={"8px"}
 						placeholder="All Type of Category"
-					/>
+						id="category_id"
+						onChange={valueHandler}
+					>
+						{categoryList.map((val) => (
+							<option value={val.id}>{val.category}</option>
+						))}
+					</Select>
 					<Select
 						fontStyle={"normal"}
 						fontWeight={"500"}
@@ -146,11 +200,7 @@ export default function Product() {
 					/>
 					<InputGroup w={"266px"} h={"32px"} gap={"202px"}>
 						<InputLeftElement h={"32px"}>
-							<Icon
-								as={RxMagnifyingGlass}
-								w={"15px"}
-								h={"15px"}
-							/>
+							<Icon as={RxMagnifyingGlass} w={"15px"} h={"15px"} />
 						</InputLeftElement>
 						<Input
 							className="input"
@@ -164,6 +214,7 @@ export default function Product() {
 							placeholder="Search"
 							w={"266px"}
 							h={"32px"}
+							onChange={(e) => setSearch(e.target.value)}
 						/>
 					</InputGroup>
 				</Box>
@@ -215,12 +266,22 @@ export default function Product() {
 									<Text>Product Name</Text>
 								</Flex>
 
-								<Flex flexDir={"column"}>
+								<Flex
+									flexDir={"column"}
+									id="cek"
+									onClick={(e) => {
+										// console.log(e.target.name);
+										sortHandler(JSON.parse(e.target.getAttribute("id")));
+									}}
+									zIndex={"10"}
+								>
 									<Icon
+										id={JSON.stringify({ column: "name", sort: "ASC" })}
 										cursor={"pointer"}
 										as={MdArrowDropUp}
 									/>
 									<Icon
+										id={JSON.stringify({ column: "name", sort: "DESC" })}
 										cursor={"pointer"}
 										as={MdArrowDropDown}
 									/>
@@ -238,14 +299,8 @@ export default function Product() {
 									<Text>Outlet</Text>
 								</Flex>
 								<Flex flexDir={"column"}>
-									<Icon
-										cursor={"pointer"}
-										as={MdArrowDropUp}
-									/>
-									<Icon
-										cursor={"pointer"}
-										as={MdArrowDropDown}
-									/>
+									<Icon cursor={"pointer"} as={MdArrowDropUp} />
+									<Icon cursor={"pointer"} as={MdArrowDropDown} />
 								</Flex>
 							</Flex>
 							<Flex
@@ -261,14 +316,8 @@ export default function Product() {
 								</Flex>
 
 								<Flex flexDir={"column"}>
-									<Icon
-										cursor={"pointer"}
-										as={MdArrowDropUp}
-									/>
-									<Icon
-										cursor={"pointer"}
-										as={MdArrowDropDown}
-									/>
+									<Icon cursor={"pointer"} as={MdArrowDropUp} />
+									<Icon cursor={"pointer"} as={MdArrowDropDown} />
 								</Flex>
 							</Flex>
 							<Flex
@@ -284,14 +333,8 @@ export default function Product() {
 								</Flex>
 
 								<Flex flexDir={"column"}>
-									<Icon
-										cursor={"pointer"}
-										as={MdArrowDropUp}
-									/>
-									<Icon
-										cursor={"pointer"}
-										as={MdArrowDropDown}
-									/>
+									<Icon cursor={"pointer"} as={MdArrowDropUp} />
+									<Icon cursor={"pointer"} as={MdArrowDropDown} />
 								</Flex>
 							</Flex>
 							<Flex
@@ -306,14 +349,8 @@ export default function Product() {
 									<Text>Sales Price Per Item</Text>
 								</Flex>
 								<Flex flexDir={"column"}>
-									<Icon
-										cursor={"pointer"}
-										as={MdArrowDropUp}
-									/>
-									<Icon
-										cursor={"pointer"}
-										as={MdArrowDropDown}
-									/>
+									<Icon cursor={"pointer"} as={MdArrowDropUp} />
+									<Icon cursor={"pointer"} as={MdArrowDropDown} />
 								</Flex>
 							</Flex>
 							<Flex
@@ -328,267 +365,206 @@ export default function Product() {
 									<Text>Status</Text>
 								</Flex>
 								<Flex flexDir={"column"}>
-									<Icon
-										cursor={"pointer"}
-										as={MdArrowDropUp}
-									/>
-									<Icon
-										cursor={"pointer"}
-										as={MdArrowDropDown}
-									/>
+									<Icon cursor={"pointer"} as={MdArrowDropUp} />
+									<Icon cursor={"pointer"} as={MdArrowDropDown} />
 								</Flex>
 							</Flex>
 							<Flex w={"16px"} h={"48px"}></Flex>
 						</Flex>
 						{/* map */}
 						{menu.length
-							? menu?.map((val) => {
-									return (
-										<Flex
-											flexDir={"row"}
-											justifyContent={"center"}
-											alignItems={"center"}
-											padding={"0px 16px"}
-											gap={"24px"}
-											w={"1168px"}
-											h={"46px"}
-											borderBottom={
-												"1px solid rgba(53, 53, 53, 0.1)"
-											}
-										>
+							? menu
+									?.filter((val) => {
+										if (search == "") {
+											return val;
+										} else if (
+											val.name.toLowerCase().includes(search.toLowerCase())
+										) {
+											return val;
+										}
+									})
+									.map((val) => {
+										return (
 											<Flex
 												flexDir={"row"}
-												justifyContent={"space-between"}
+												justifyContent={"center"}
 												alignItems={"center"}
-												padding={"8px 0px"}
-												gap={"8px"}
-												w={"162.67px"}
+												padding={"0px 16px"}
+												gap={"24px"}
+												w={"1168px"}
 												h={"46px"}
+												borderBottom={"1px solid rgba(53, 53, 53, 0.1)"}
 											>
 												<Flex
+													flexDir={"row"}
+													justifyContent={"space-between"}
+													alignItems={"center"}
+													padding={"8px 0px"}
 													gap={"8px"}
-													alignItems={"center"}
+													w={"162.67px"}
+													h={"46px"}
 												>
-													<Checkbox />
-													<Image
-														src={val.img_url}
-														w={"24px"}
-														h={"24px"}
-														borderRadius={"4px"}
+													<Flex gap={"8px"} alignItems={"center"}>
+														<Checkbox />
+														<Image
+															src={val.img_url}
+															w={"24px"}
+															h={"24px"}
+															borderRadius={"4px"}
+														/>
+														<Text>{val.name} </Text>
+													</Flex>
+												</Flex>
+												<Flex
+													flexDir={"row"}
+													justifyContent={"space-between"}
+													alignItems={"center"}
+													gap={"8px"}
+													w={"162.67px"}
+													h={"46px"}
+												>
+													<Flex gap={"5px"} alignItems={"center"}>
+														<Text>Grand Batam Mall</Text>
+													</Flex>
+												</Flex>
+												<Flex
+													flexDir={"row"}
+													justifyContent={"space-between"}
+													alignItems={"center"}
+													gap={"8px"}
+													w={"162.67px"}
+													h={"46px"}
+												>
+													<Flex gap={"5px"} alignItems={"center"}>
+														<Text>CAK021</Text>
+													</Flex>
+												</Flex>
+												<Flex
+													flexDir={"row"}
+													justifyContent={"space-between"}
+													alignItems={"center"}
+													gap={"8px"}
+													w={"162.67px"}
+													h={"46px"}
+												>
+													<Flex gap={"5px"} alignItems={"center"}>
+														<Text>{val.Category.category}</Text>
+													</Flex>
+												</Flex>
+												<Flex
+													flexDir={"row"}
+													justifyContent={"space-between"}
+													alignItems={"center"}
+													gap={"8px"}
+													w={"162.67px"}
+													h={"46px"}
+												>
+													<Flex gap={"5px"} alignItems={"center"}>
+														<Text>{val.price}</Text>
+													</Flex>
+												</Flex>
+												<Flex
+													flexDir={"row"}
+													justifyContent={"space-between"}
+													alignItems={"center"}
+													gap={"8px"}
+													w={"162.67px"}
+													h={"46px"}
+												>
+													<Flex gap={"5px"} alignItems={"center"}>
+														<Text
+															color={"#45BB71"}
+															fontFamily={"Roboto"}
+															fontStyle={"normal"}
+															fontWeight={"500"}
+															fontSize={"12px"}
+															lineHeight={"14px"}
+														>
+															Published
+														</Text>
+													</Flex>
+												</Flex>
+												<Menu>
+													<MenuButton
+														as={BiDotsHorizontalRounded}
+														w={"16px"}
+														h={"48px"}
+														cursor={"pointer"}
 													/>
-													<Text>{val.name} </Text>
-												</Flex>
-											</Flex>
-											<Flex
-												flexDir={"row"}
-												justifyContent={"space-between"}
-												alignItems={"center"}
-												gap={"8px"}
-												w={"162.67px"}
-												h={"46px"}
-											>
-												<Flex
-													gap={"5px"}
-													alignItems={"center"}
-												>
-													<Text>
-														Grand Batam Mall
-													</Text>
-												</Flex>
-											</Flex>
-											<Flex
-												flexDir={"row"}
-												justifyContent={"space-between"}
-												alignItems={"center"}
-												gap={"8px"}
-												w={"162.67px"}
-												h={"46px"}
-											>
-												<Flex
-													gap={"5px"}
-													alignItems={"center"}
-												>
-													<Text>CAK021</Text>
-												</Flex>
-											</Flex>
-											<Flex
-												flexDir={"row"}
-												justifyContent={"space-between"}
-												alignItems={"center"}
-												gap={"8px"}
-												w={"162.67px"}
-												h={"46px"}
-											>
-												<Flex
-													gap={"5px"}
-													alignItems={"center"}
-												>
-													<Text>
-														{val.category_id}
-													</Text>
-												</Flex>
-											</Flex>
-											<Flex
-												flexDir={"row"}
-												justifyContent={"space-between"}
-												alignItems={"center"}
-												gap={"8px"}
-												w={"162.67px"}
-												h={"46px"}
-											>
-												<Flex
-													gap={"5px"}
-													alignItems={"center"}
-												>
-													<Text>{val.price}</Text>
-												</Flex>
-											</Flex>
-											<Flex
-												flexDir={"row"}
-												justifyContent={"space-between"}
-												alignItems={"center"}
-												gap={"8px"}
-												w={"162.67px"}
-												h={"46px"}
-											>
-												<Flex
-													gap={"5px"}
-													alignItems={"center"}
-												>
-													<Text
-														color={"#45BB71"}
-														fontFamily={"Roboto"}
-														fontStyle={"normal"}
-														fontWeight={"500"}
-														fontSize={"12px"}
-														lineHeight={"14px"}
-													>
-														Published
-													</Text>
-												</Flex>
-											</Flex>
-											<Menu>
-												<MenuButton
-													as={BiDotsHorizontalRounded}
-													w={"16px"}
-													h={"48px"}
-													cursor={"pointer"}
-												/>
-												<MenuList>
-													<MenuItem>Publish</MenuItem>
-													<MenuItem
-														onClick={() => {
-															onOpen();
-															setKobel(true);
-														}}
-													>
-														Edit
-													</MenuItem>
-													<Modal
-														isOpen={isOpen}
-														onClose={onClose}
-													>
-														<ModalOverlay />
-														<ModalContent>
-															{kobel ? (
-																<EditProduct
-																	onClose={
-																		onClose
-																	}
-																	id={val.id}
-																	getAll={
-																		getAll
-																	}
-																/>
-															) : null}
-														</ModalContent>
-													</Modal>
-													<MenuItem
-														onClick={() => {
-															onOpen();
-															setKobel(false);
-														}}
-													>
-														Remove
-													</MenuItem>
-													{!kobel ? (
-														<>
-															<Modal
-																isOpen={isOpen}
-																onClose={
-																	onClose
-																}
-															>
-																<ModalOverlay />
-																<ModalContent>
-																	<ModalHeader>
-																		Remove
-																		Item
-																	</ModalHeader>
-																	<ModalCloseButton />
-																	<ModalBody>
-																		Deleting
-																		the
-																		{` ${val.name} `}
-																		will
-																		permanently
-																		remove
-																		it from
-																		the list
-																		and
-																		cannot
-																		be
-																		undone.
-																	</ModalBody>
+													<MenuList>
+														<MenuItem>Publish</MenuItem>
+														<MenuItem
+															onClick={() => {
+																onOpen();
+																setKobel(true);
+															}}
+														>
+															Edit
+														</MenuItem>
+														<Modal isOpen={isOpen} onClose={onClose}>
+															<ModalOverlay />
+															<ModalContent>
+																{kobel ? (
+																	<EditProduct
+																		onClose={onClose}
+																		id={val.id}
+																		getAll={getAll}
+																	/>
+																) : null}
+															</ModalContent>
+														</Modal>
+														<MenuItem
+															onClick={() => {
+																onOpen();
+																setKobel(false);
+															}}
+														>
+															Remove
+														</MenuItem>
+														{!kobel ? (
+															<>
+																<Modal isOpen={isOpen} onClose={onClose}>
+																	<ModalOverlay />
+																	<ModalContent>
+																		<ModalHeader>Remove Item</ModalHeader>
+																		<ModalCloseButton />
+																		<ModalBody>
+																			Deleting the
+																			{` ${val.name} `}
+																			will permanently remove it from the list
+																			and cannot be undone.
+																		</ModalBody>
 
-																	<ModalFooter>
-																		<Button
-																			w={
-																				"50%"
-																			}
-																			bgColor={
-																				"white"
-																			}
-																			border={
-																				"1px"
-																			}
-																			mr={
-																				3
-																			}
-																			onClick={
-																				onClose
-																			}
-																		>
-																			Close
-																		</Button>
-																		<Button
-																			w={
-																				"50%"
-																			}
-																			bgColor={
-																				"#D0011C	"
-																			}
-																			color={
-																				"white"
-																			}
-																			onClick={() => {
-																				deleteMenu(
-																					val
-																				);
-																			}}
-																		>
-																			Remove
-																		</Button>
-																	</ModalFooter>
-																</ModalContent>
-															</Modal>
-														</>
-													) : null}
-												</MenuList>
-											</Menu>
-										</Flex>
-									);
-							  })
+																		<ModalFooter>
+																			<Button
+																				w={"50%"}
+																				bgColor={"white"}
+																				border={"1px"}
+																				mr={3}
+																				onClick={onClose}
+																			>
+																				Close
+																			</Button>
+																			<Button
+																				w={"50%"}
+																				bgColor={"#D0011C	"}
+																				color={"white"}
+																				onClick={() => {
+																					deleteMenu(val);
+																				}}
+																			>
+																				Remove
+																			</Button>
+																		</ModalFooter>
+																	</ModalContent>
+																</Modal>
+															</>
+														) : null}
+													</MenuList>
+												</Menu>
+											</Flex>
+										);
+									})
 							: null}
 					</Flex>
 					{/* pagination */}

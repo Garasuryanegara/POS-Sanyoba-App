@@ -79,7 +79,7 @@ export default function AddProduct() {
 				console.log(product);
 				await api.post("/menus", product).then((res) => {
 					alert("product added");
-					nav("/product");
+					// nav("/product");
 				});
 			}
 		},
@@ -129,12 +129,7 @@ export default function AddProduct() {
 				<Flex id="productInfo">Product Information</Flex>
 
 				{/* outlet */}
-				<Flex
-					alignItems={"center"}
-					gap={"120px"}
-					w={"703px"}
-					h={"32px"}
-				>
+				<Flex alignItems={"center"} gap={"120px"} w={"703px"} h={"32px"}>
 					<Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
 						Outlet
 					</Flex>
@@ -157,12 +152,7 @@ export default function AddProduct() {
 					/>
 				</Flex>
 				{/* product name */}
-				<Flex
-					alignItems={"center"}
-					gap={"120px"}
-					w={"703px"}
-					h={"32px"}
-				>
+				<Flex alignItems={"center"} gap={"120px"} w={"703px"} h={"32px"}>
 					<Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
 						Product Name<Flex color={"#D0011C"}>*</Flex>
 					</Flex>
@@ -176,12 +166,7 @@ export default function AddProduct() {
 					></Input>
 				</Flex>
 				{/* product desc */}
-				<Flex
-					alignItems={"flex-start"}
-					gap={"120px"}
-					w={"703px"}
-					h={"107px"}
-				>
+				<Flex alignItems={"flex-start"} gap={"120px"} w={"703px"} h={"107px"}>
 					<Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
 						Product Description
 					</Flex>
@@ -397,11 +382,11 @@ export default function AddProduct() {
 							alignSelf={"stretch"}
 							flexGrow={"0"}
 						>
-							Use a 1:1 photo ratio with file size between 10KB
-							and a maximum of 1MB. <br />
-							Acceptable formats are .jpg, .jpeg, and .png. The
-							minimum size should be 100px x 100px for optimal
-							display. You can upload a maximum of 5 photos.
+							Use a 1:1 photo ratio with file size between 10KB and a maximum of
+							1MB. <br />
+							Acceptable formats are .jpg, .jpeg, and .png. The minimum size
+							should be 100px x 100px for optimal display. You can upload a
+							maximum of 5 photos.
 						</Flex>
 					</Flex>
 					<>
@@ -438,18 +423,12 @@ export default function AddProduct() {
 								lineHeight={"14px"}
 								color={"#353535"}
 							>
-								<Icon
-									as={HiOutlineUpload}
-									w={"16px"}
-									h={"16px"}
-								/>
+								<Icon as={HiOutlineUpload} w={"16px"} h={"16px"} />
 								<Text as={"span"}>
 									Drag and Drop File or{" "}
 									<Text
 										as={"span"}
-										onClick={() =>
-											inputFileRef.current.click()
-										}
+										onClick={() => inputFileRef.current.click()}
 										cursor={"pointer"}
 										color={"#45BB71"}
 										textDecor={"underline"}
@@ -495,18 +474,8 @@ export default function AddProduct() {
 					flex={"none"}
 					flexGrow={"0"}
 				>
-					<Flex
-						alignItems={"center"}
-						gap={"120px"}
-						w={"703px"}
-						h={"32px"}
-					>
-						<Flex
-							w={"160px"}
-							h={"14px"}
-							flex={"none"}
-							flexGrow={"0"}
-						>
+					<Flex alignItems={"center"} gap={"120px"} w={"703px"} h={"32px"}>
+						<Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
 							SKU (Stock Keeping Unit)
 						</Flex>
 						<Input
@@ -527,18 +496,8 @@ export default function AddProduct() {
 					flex={"none"}
 					flexGrow={"0"}
 				>
-					<Flex
-						alignItems={"center"}
-						gap={"120px"}
-						w={"703px"}
-						h={"32px"}
-					>
-						<Flex
-							w={"160px"}
-							h={"14px"}
-							flex={"none"}
-							flexGrow={"0"}
-						>
+					<Flex alignItems={"center"} gap={"120px"} w={"703px"} h={"32px"}>
+						<Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
 							Stock Quantity
 						</Flex>
 						<Input
@@ -550,31 +509,17 @@ export default function AddProduct() {
 					</Flex>
 				</Flex>
 				{/* stock alert */}
-				<Flex
-					alignItems={"center"}
-					gap={"120px"}
-					w={"703px"}
-					h={"50px"}
-				>
+				<Flex alignItems={"center"} gap={"120px"} w={"703px"} h={"50px"}>
 					<Flex
 						flexDir={"column"}
 						alignItems={"flex-start"}
 						padding={"0px"}
 						gap={"8px"}
 					>
-						<Flex
-							w={"160px"}
-							h={"14px"}
-							flex={"none"}
-							flexGrow={"0"}
-						>
+						<Flex w={"160px"} h={"14px"} flex={"none"} flexGrow={"0"}>
 							Stock Alert
 						</Flex>
-						<Flex
-							w={"160px"}
-							h={"28px"}
-							color={"rgba(53, 53, 53, 0.6)"}
-						>
+						<Flex w={"160px"} h={"28px"} color={"rgba(53, 53, 53, 0.6)"}>
 							Activate stock alert to get the stock monitoring.
 						</Flex>
 					</Flex>

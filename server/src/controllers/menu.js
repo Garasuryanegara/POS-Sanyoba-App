@@ -57,23 +57,25 @@ const menuControllers = {
 	},
 	getMenuDraft: async (req, res) => {
 		try {
-			const { limit, offset, column, sort, category, search } = req.query;
+			const { limit, offset, column, sort, category_id, search } = req.query;
 			const whereClause = {};
 			let totalPages;
 			let orderClause;
-			if (category) {
-				whereClause["$Category.category$"] = category;
+			if (category_id) {
+				whereClause.category_id = category_id;
 			}
 			if (search) {
 				whereClause.name = {
 					[Op.like]: `%${search}%`,
 				};
 			}
+
 			if (column === "category") {
 				orderClause = [[db.Category, column, sort]];
 			} else if (column) {
 				orderClause = [[column, sort]];
 			}
+
 			if (limit) {
 				const totalCount = await db.Menu.count({
 					include: [
@@ -97,6 +99,7 @@ const menuControllers = {
 				limit: limit ? Number(limit) : null,
 				offset: offset ? Number(offset) : null,
 			});
+			console.log(menus);
 			res.send({
 				menus: menus,
 				totalPages: totalPages,
