@@ -19,123 +19,102 @@ import { SlOptions } from "react-icons/sl";
 import { MdOutlinePersonOutline } from "react-icons/md";
 import { FaMotorcycle } from "react-icons/fa";
 import { TbPlaylistX } from "react-icons/tb";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ModalSelectQty } from "./Modal";
-import InfiniteScroll from "react-infinite-scroller";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { api } from "../api/api";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function ContentCashier() {
-  const category = [
-    { name: "All" },
-    { name: "Cakes" },
-    { name: "Pie and Tarts" },
-    { name: "Cookies and Brownies" },
-    { name: "Ice Cream and Sorbets" },
-    { name: "Specialty" },
-  ];
-  const product = [
-    {
-      name: "Chocolate Fudge Cake",
-      img: "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image/public/recipe_legacy/5403-3-large.jpg?itok=nKaVtQvV",
-      category: "cakes",
-      price: "35.000",
-    },
-    {
-      name: "Vanilla Bean Cake",
-      img: "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image/public/recipe_legacy/5403-3-large.jpg?itok=nKaVtQvV",
-      category: "cakes",
-      price: "35.000",
-    },
-    {
-      name: "Red Velvet Cake",
-      img: "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image/public/recipe_legacy/5403-3-large.jpg?itok=nKaVtQvV",
-      category: "cakes",
-      price: "35.000",
-    },
-    {
-      name: "Carrot Cake",
-      img: "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image/public/recipe_legacy/5403-3-large.jpg?itok=nKaVtQvV",
-      category: "cakes",
-      price: "35.000",
-    },
-    {
-      name: "Lemon Pound Cake",
-      img: "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image/public/recipe_legacy/5403-3-large.jpg?itok=nKaVtQvV",
-      category: "cakes",
-      price: "35.000",
-    },
-    {
-      name: "Raspberry Cheesecake",
-      img: "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image/public/recipe_legacy/5403-3-large.jpg?itok=nKaVtQvV",
-      category: "cakes",
-      price: "35.000",
-    },
-    {
-      name: "Apple Pie",
-      img: "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image/public/recipe_legacy/5403-3-large.jpg?itok=nKaVtQvV",
-      category: "pie and tarts",
-      price: "35.000",
-    },
-    {
-      name: "Kelly Lime Pie",
-      img: "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image/public/recipe_legacy/5403-3-large.jpg?itok=nKaVtQvV",
-      category: "pie and tarts",
-      price: "35.000",
-    },
-    {
-      name: "Cherry Tart",
-      img: "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image/public/recipe_legacy/5403-3-large.jpg?itok=nKaVtQvV",
-      category: "pie and tarts",
-      price: "35.000",
-    },
-    {
-      name: "Chocolate Chip Cookies",
-      img: "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image/public/recipe_legacy/5403-3-large.jpg?itok=nKaVtQvV",
-      category: "cookies and brownies",
-      price: "35.000",
-    },
-    {
-      name: "Oatmeal Raisin Cookies",
-      img: "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image/public/recipe_legacy/5403-3-large.jpg?itok=nKaVtQvV",
-      category: "cookies and brownies",
-      price: "35.000",
-    },
-    {
-      name: "Peanut Butter Cookies",
-      img: "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image/public/recipe_legacy/5403-3-large.jpg?itok=nKaVtQvV",
-      category: "cookies and brownies",
-      price: "35.000",
-    },
-    {
-      name: "Peanut Butter Cookies",
-      img: "https://www.kingarthurbaking.com/sites/default/files/styles/featured_image/public/recipe_legacy/5403-3-large.jpg?itok=nKaVtQvV",
-      category: "cookies and brownies",
-      price: "35.000",
-    },
-  ];
   // console.log(category);
   const [search, setSearch] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [orderList, setOrderList] = useState([]);
-  const [order, setOrder] = useState({ name: "", qty: "", price: "" });
+  const [order, setOrder] = useState({ id: "", name: "", qty: "", price: "" });
+  const [cont, setCont] = useState(9);
+  const [mmk, setMmk] = useState();
+  const [isClicked, setIsClicked] = useState();
+  const nav = useNavigate();
 
   const handleObjectValue = async (val) => {
     console.log(val);
-    setOrder({ ...order, name: val.name, price: val.price }); //jangan lupa price: val.price
-    console.log({ ...order, name: val.name, price: val.price });
+    setOrder({ ...order, name: val.name, price: val.price, id: val.id }); //jangan lupa price: val.price
+    console.log({ ...order, name: val.name, price: val.price, id: val.id });
     console.log(orderList.length);
   };
-  const [hasMore, setHasMore] = useState(true);
-  const [data, setData] = useState([]);
-  const loadFunc = () => {
-    // if (data.length <= product.length) {
-    const startIndex = data.length;
-    const endIndex = startIndex + 9;
 
-    const nextData = product.slice(startIndex, endIndex);
-    return setData([...data, ...nextData]);
-    // } else {
-    // return setHasMore(false);
-    // }
+  // fetch all menu
+  const [menu, setMenu] = useState([]);
+  const [pageNumber, setPageNumber] = useState(0);
+  const fetchMenu = async (category_id) => {
+    await api
+      .get(`/menus`, { params: { limit: cont, category_id } })
+      .then((res) => {
+        console.log(res.data);
+        setMenu(res.data.menus);
+        if (cont >= res.data.totalCount) {
+          // console.log("udh penuh tolol");
+        }
+        console.log(cont);
+      });
+  };
+
+  //fetch all category
+  const [category, setCategory] = useState([]);
+  const fetchCategory = async () => {
+    await api.get("/categories/").then((res) => {
+      // console.log(res.data);
+      setCategory(res.data);
+    });
+  };
+  useEffect(() => {
+    fetchMenu();
+    fetchCategory();
+  }, []);
+  useEffect(() => {
+    fetchMenu(mmk);
+  }, [cont]);
+  useEffect(() => {
+    if (mmk) {
+      fetchMenu(mmk);
+    }
+    setCont(9);
+  }, [mmk]);
+  //rubah warna saat click
+  const handleClick = (e) => {
+    setIsClicked(e.target.id);
+  };
+
+  //fetch menu by category
+  // const menuByCategory = async (category_id) => {
+  //   await api.get(`/menus/`, { params: { category_id } }).then((res) => {
+  //     console.log(res.data);
+  //     setMenu(res.data.menus);
+  //   });
+  // };
+  //count total price variable
+  const totalPrice = orderList
+    .reduce((accumulator, val) => {
+      return accumulator + Number(val.price * val.qty);
+    }, 0)
+    .toLocaleString("id-ID");
+
+  //post new order
+
+  const postOrder = async (req, res) => {
+    const total = { total: totalPrice };
+    const hasil = await api.post("/orders", total).then((result) => {
+      localStorage.setItem("order_id", JSON.stringify(result.data.id));
+      orderList.map(async (val) => {
+        await api.post("/orderDetails", {
+          ...val,
+          order_id: result.data.id,
+          menu_id: val.id,
+        });
+        console.log(result);
+      });
+    });
+    nav("/trxDetail");
   };
 
   return (
@@ -143,7 +122,7 @@ export default function ContentCashier() {
       <Box
         maxW={"1194px"}
         w={"100%"}
-        h={"834px"}
+        h={"100vh"}
         bgColor={"#F1F1F1"}
         top={0}
         zIndex={-1}
@@ -191,6 +170,29 @@ export default function ContentCashier() {
                   },
                 }}
               >
+                <Center
+                  padding={"16px"}
+                  fontWeight={"600"}
+                  fontSize={"16px"}
+                  justifyContent={"center"}
+                  cursor={"pointer"}
+                  color={isClicked == "all" ? "#45BB71" : "black"}
+                  // h="100%"
+                  // w="100%"
+                  display={"inline-flex"}
+                  wrap={"wrap"}
+                  // maxW={"px"}
+                  flex={"1 0 auto"}
+                  id="all"
+                  onClick={(e) => {
+                    setCont(9);
+                    setMmk(null);
+                    fetchMenu();
+                    handleClick(e);
+                  }}
+                >
+                  All
+                </Center>
                 {category.map((val) => (
                   <Center
                     padding={"16px"}
@@ -198,23 +200,28 @@ export default function ContentCashier() {
                     fontSize={"16px"}
                     justifyContent={"center"}
                     cursor={"pointer"}
+                    color={isClicked == val.id ? "#45BB71" : "black"}
                     // h="100%"
                     // w="100%"
                     display={"inline-flex"}
                     wrap={"wrap"}
+                    q
                     // maxW={"px"}
                     flex={"1 0 auto"}
+                    id={val.id}
+                    onClick={(e) => {
+                      setMmk(val.id);
+                      handleClick(e);
+                    }}
                   >
-                    {val.name}
+                    {val.category}
                   </Center>
                 ))}
               </Box>
-              <InfiniteScroll
-                pageStart={0}
-                loadMore={loadFunc}
-                // hasMore={hasMore}
-              >
+
+              <Box overflow="scroll">
                 <Box
+                  // bgColor={"blue"}
                   maxW="660px"
                   w="100%"
                   h="570px"
@@ -222,7 +229,6 @@ export default function ContentCashier() {
                   display="grid"
                   gridGap="32px"
                   gridColumnGap="24px"
-                  overflowY="scroll"
                   css={{
                     "&::-webkit-scrollbar": {
                       display: "none",
@@ -237,7 +243,7 @@ export default function ContentCashier() {
                     md: "repeat(4, 1fr)", // adjust the number of rows as needed for different screen sizes
                   }}
                 >
-                  {product
+                  {menu
                     .filter((val) => {
                       if (search == "") {
                         return val;
@@ -250,7 +256,7 @@ export default function ContentCashier() {
                     .map((val) => (
                       <>
                         <Box
-                          backgroundImage={`url('${val.img}')`}
+                          backgroundImage={`url('${val.img_url}')`}
                           backgroundSize={"100% 100%"}
                           w={"204px"}
                           h={"146px"}
@@ -280,8 +286,20 @@ export default function ContentCashier() {
                         </Box>
                       </>
                     ))}
+                  <Center>
+                    <Button
+                      bg={"#369A64"}
+                      color={"white"}
+                      onClick={() => {
+                        setCont(cont + 9);
+                        // console.log(cont);
+                      }}
+                    >
+                      More Meals
+                    </Button>
+                  </Center>
                 </Box>
-              </InfiniteScroll>
+              </Box>
             </Box>
             <Box maxW={"510px"} w={"100%"} h={"700px"} padding={"0px 24px"}>
               <Flex
@@ -357,7 +375,7 @@ export default function ContentCashier() {
                       fontWeight={"500"}
                       fontSize={"16px"}
                     >
-                      0001
+                      {localStorage.getItem("order_id")}
                     </Flex>
                   </Flex>
                   <Flex
@@ -448,7 +466,7 @@ export default function ContentCashier() {
                           justifyContent={"center"}
                           alignItems={"center"}
                         >
-                          Rp. {val.price}
+                          Rp. {val.price.toLocaleString("id-ID")}
                         </Flex>
                       </Flex>
                     ))}
@@ -483,13 +501,7 @@ export default function ContentCashier() {
                           justifyContent={"space-around"}
                           alignItems={"center"}
                         >
-                          Rp.{" "}
-                          {orderList
-                            .reduce((accumulator, val) => {
-                              return accumulator + Number(val.price * val.qty);
-                            }, 0)
-                            .toLocaleString("id-ID")}
-                          .000
+                          Rp. {totalPrice}
                         </Flex>
                       </Flex>
                     </Flex>
@@ -532,6 +544,9 @@ export default function ContentCashier() {
                     borderRight={"1px"}
                     borderColor={"grey"}
                     cursor={"pointer"}
+                    onClick={() => {
+                      setOrderList([]);
+                    }}
                   >
                     Reset
                   </Flex>
@@ -556,6 +571,7 @@ export default function ContentCashier() {
                     Cash Drawer
                   </Flex>
                 </Flex>
+                {/* <Link to={orderList.length ? "/trxDetail" : null}> */}
                 <Flex
                   w={"100%"}
                   h={"67px"}
@@ -568,9 +584,11 @@ export default function ContentCashier() {
                   alignItems={"center"}
                   borderBottomRadius={"8px"}
                   cursor={"pointer"}
+                  onClick={orderList.length ? postOrder : null}
                 >
                   Proceed Payment
                 </Flex>
+                {/* </Link> */}
               </Flex>
             </Box>
           </Flex>

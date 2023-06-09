@@ -2,6 +2,16 @@
   text-align: center;
 }
 
+.loginL {
+  /* background-color: #104034dc; */
+  background-color: #104034b1;
+  /* background-image: ; */
+}
+
+.loginR {
+  background-color: #10403459;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

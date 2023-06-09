@@ -22,6 +22,7 @@ export default function Navbar() {
         color="#FFFFFF"
         justifyContent={"space-between"}
         width="1194px"
+        zIndex={"2"}
       >
         <Box
           width={"300px"}
@@ -56,8 +57,13 @@ export default function Navbar() {
           </Box>
         </Box>
       </Flex>
-      <Box top={"60px"} zIndex={"2"}>
-        {side ? <Sidebar /> : null}
+      <Box
+        position="fixed"
+        left={side ? "0" : "-100%"}
+        transition="left 1s ease-in-out"
+        zIndex={"0"}
+      >
+        <Sidebar />
       </Box>
     </Box>
   );

@@ -9,14 +9,16 @@ app.use(express.json());
 const router = require("./routes");
 const db = require("./models");
 // db.sequelize.sync({ alter: true });
+// db.sequelize.sync({ force: true });
 
 app.use("/users", router.userRouter);
 app.use("/orders", router.orderRouter);
 app.use("/orderDetails", router.orderDetailRouter);
 app.use("/menus", router.menuRouter);
+app.use("/emp", router.userRouter);
 app.use("/categories", router.categoryRouter);
 app.use("/productImg", express.static(`${__dirname}/public/productImg`));
 
 app.listen(PORT, () => {
-	console.log(`server is running on PORT ${PORT}`);
+  console.log(`server is running on PORT ${PORT}`);
 });

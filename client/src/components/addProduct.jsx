@@ -79,7 +79,7 @@ export default function AddProduct() {
 				console.log(product);
 				await api.post("/menus", product).then((res) => {
 					alert("product added");
-					// nav("/product");
+					nav("/product");
 				});
 			}
 		},
@@ -87,7 +87,7 @@ export default function AddProduct() {
 
 	async function inputHandler(event) {
 		const { value, id } = event.target;
-
+		console.log({ id, value });
 		formik.setFieldValue(id, value);
 	}
 
