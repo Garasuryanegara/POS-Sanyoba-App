@@ -46,6 +46,8 @@ const userController = {
           ],
         },
       });
+
+      console.log(user);
       if (user) {
         const match = await bcrypt.compare(password, user.dataValues.password);
         console.log(match);
@@ -83,11 +85,11 @@ const userController = {
     }
   },
   getByToken: async (req, res, next) => {
+    console.log("masuk sini");
     try {
       let token = req.headers.authorization;
       token = token.split(" ")[1];
       console.log(req.headers.authorization);
-      console.log("asdsa");
       let p = await db.Token.findOne({
         where: {
           [Op.and]: [
@@ -121,6 +123,7 @@ const userController = {
     }
   },
   getUserByToken: async (req, res) => {
+    console.log("masuk sini juga");
     res.send(req.user);
   },
   uploadAvatar: async (req, res) => {
@@ -212,6 +215,23 @@ const userController = {
       console.log(err);
       res.status(500).send({
         message: err.message,
+      });
+    }
+  },
+  deleteUser: async (req, res) => {
+    try {
+      // console.log("asda");
+      await db.User.destroy({
+        where: {
+          id: req.params.id,
+        },
+      });
+      return res.status(200).send({
+        message: "Employee berhasil dihapus",
+      });
+    } catch (error) {
+      res.status(500).send({
+        message: error.message,
       });
     }
   },

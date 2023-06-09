@@ -47,7 +47,11 @@ export default function LoginPage() {
       .post("/users/login", user)
       .then((res) => {
         console.log(res.data);
+        if (!res.data.token) {
+          throw "error";
+        }
         localStorage.setItem("auth", JSON.stringify(res.data.token));
+
         // dispatch({
         //   type: "login",
         //   payload: res.data.value,
