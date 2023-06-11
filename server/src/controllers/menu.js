@@ -59,6 +59,7 @@ const menuControllers = {
 		try {
 			const { limit, offset, column, sort, category_id, search } = req.query;
 			const whereClause = {};
+			let totalCount;
 			let totalPages;
 			let orderClause;
 			if (category_id) {
@@ -77,7 +78,7 @@ const menuControllers = {
 			}
 
 			if (limit) {
-				const totalCount = await db.Menu.count({
+				totalCount = await db.Menu.count({
 					include: [
 						{
 							model: db.Category,
@@ -103,6 +104,7 @@ const menuControllers = {
 			res.send({
 				menus: menus,
 				totalPages: totalPages,
+				totalCount: totalCount,
 			});
 		} catch (err) {
 			console.log(err);

@@ -44,59 +44,28 @@ export default function Product() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [search, setSearch] = useState("");
 	const [categoryList, setCategoryList] = useState([]);
-	const [filter, setFilter] = useState({});
-	const [sort, setSort] = useState({});
-
+	const [filter, setFilter] = useState({ limit: 10 });
+	const [shown, setShown] = useState({ offset: 0 });
+	const [pages, setPages] = useState([]);
 	useEffect(() => {
 		categoryId();
-	}, []);
-
-	const categoryId = async () => {
-		await api.get("/categories", categoryList).then((res) => {
-			setCategoryList(res.data);
-		});
-	};
-
-	useEffect(() => {
 		getAll();
 	}, []);
 
-	async function deleteMenu(val) {
-		await api.delete("/menus/" + val.id);
-		getAll();
-	}
-	// useEffect(() => {
-	// 	if (category_id) getAll(categoryId);
-	// }, [category_id]);
 	useEffect(() => {
 		if (filter) {
 			getAll();
 		}
 	}, [filter]);
-	function sortHandler(column) {
-		// e.stopPropagation();
 
-		console.log(column);
-		// setSort({ ...column });
-		setFilter({ ...filter, ...column });
-
-		// const curentSort = sort[name] || "DESC";
-		// const newSort = curentSort === "ASC" ? "DESC" : "ASC";
-		// setSort({
-		// 	[name]: filter[column.name],
-		// 	[name]: column,
-		// });
-	}
-	function valueHandler(e) {
-		const tempObj = {};
-		tempObj[e.target.id] = e.target.value;
-		console.log(tempObj);
-		setFilter({ ...filter, ...tempObj });
-	}
 	useEffect(() => {
-		console.log(sort);
-		setFilter({ ...filter, ...sort });
-	}, [sort]);
+		if (shown.offset >= 0 && shown.offset <= shown.totalCount) {
+			setFilter({ ...filter, offset: shown.offset });
+		}
+	}, [shown.offset]);
+	useEffect(() => {
+		pageHandler();
+	}, [shown.totalPages]);
 
 	async function getAll() {
 		await api
@@ -104,9 +73,46 @@ export default function Product() {
 				params: filter,
 			})
 			.then((res) => {
-				console.log(res.data.menus);
+				console.log(res.data);
 				setMenu(res.data.menus);
+				setShown({
+					...shown,
+					totalPages: res.data.totalPages,
+					totalCount: res.data.totalCount,
+				});
 			});
+	}
+
+	async function categoryId() {
+		await api.get("/categories", categoryList).then((res) => {
+			setCategoryList(res.data);
+		});
+	}
+
+	function valueHandler(e) {
+		const tempObj = {};
+		tempObj[e.target.id] = e.target.value;
+		console.log(tempObj);
+		setFilter({ ...filter, ...tempObj });
+	}
+
+	function sortHandler(column) {
+		console.log(column);
+		setFilter({ ...filter, ...column });
+	}
+
+	function pageHandler() {
+		const output = [];
+		for (let i = 1; i <= shown.totalPages; i++) {
+			output.push(i);
+		}
+		setPages(output);
+		console.log(output);
+	}
+
+	async function deleteMenu(val) {
+		await api.delete("/menus/" + val.id);
+		getAll();
 	}
 
 	return (
@@ -200,7 +206,12 @@ export default function Product() {
 					/>
 					<InputGroup w={"266px"} h={"32px"} gap={"202px"}>
 						<InputLeftElement h={"32px"}>
-							<Icon as={RxMagnifyingGlass} w={"15px"} h={"15px"} />
+							<Icon
+								as={RxMagnifyingGlass}
+								w={"15px"}
+								h={"15px"}
+								onClick={() => setFilter({ ...filter, search: search })}
+							/>
 						</InputLeftElement>
 						<Input
 							className="input"
@@ -211,10 +222,15 @@ export default function Product() {
 							alignItems={"center"}
 							border={"1px solid rgba(53, 53, 53, 0.3)"}
 							borderRadius={"8px"}
-							placeholder="Search"
+							placeholder="search"
 							w={"266px"}
 							h={"32px"}
-							onChange={(e) => setSearch(e.target.value)}
+							onChange={(e) => {
+								setSearch(e.target.value);
+								if (!e.target.value) {
+									setFilter({ ...filter, search: "" });
+								}
+							}}
 						/>
 					</InputGroup>
 				</Box>
@@ -332,9 +348,24 @@ export default function Product() {
 									<Text>Category</Text>
 								</Flex>
 
-								<Flex flexDir={"column"}>
-									<Icon cursor={"pointer"} as={MdArrowDropUp} />
-									<Icon cursor={"pointer"} as={MdArrowDropDown} />
+								<Flex
+									flexDir={"column"}
+									onClick={(e) => {
+										// console.log(e.target.name);
+										sortHandler(JSON.parse(e.target.getAttribute("id")));
+									}}
+									zIndex={"10"}
+								>
+									<Icon
+										id={JSON.stringify({ column: "category", sort: "ASC" })}
+										cursor={"pointer"}
+										as={MdArrowDropUp}
+									/>
+									<Icon
+										id={JSON.stringify({ column: "category", sort: "DESC" })}
+										cursor={"pointer"}
+										as={MdArrowDropDown}
+									/>
 								</Flex>
 							</Flex>
 							<Flex
@@ -348,9 +379,24 @@ export default function Product() {
 								<Flex gap={"5px"} alignItems={"center"}>
 									<Text>Sales Price Per Item</Text>
 								</Flex>
-								<Flex flexDir={"column"}>
-									<Icon cursor={"pointer"} as={MdArrowDropUp} />
-									<Icon cursor={"pointer"} as={MdArrowDropDown} />
+								<Flex
+									flexDir={"column"}
+									onClick={(e) => {
+										// console.log(e.target.name);
+										sortHandler(JSON.parse(e.target.getAttribute("id")));
+									}}
+									zIndex={"10"}
+								>
+									<Icon
+										id={JSON.stringify({ column: "price", sort: "ASC" })}
+										cursor={"pointer"}
+										as={MdArrowDropUp}
+									/>
+									<Icon
+										id={JSON.stringify({ column: "price", sort: "DESC" })}
+										cursor={"pointer"}
+										as={MdArrowDropDown}
+									/>
 								</Flex>
 							</Flex>
 							<Flex
@@ -373,198 +419,188 @@ export default function Product() {
 						</Flex>
 						{/* map */}
 						{menu.length
-							? menu
-									?.filter((val) => {
-										if (search == "") {
-											return val;
-										} else if (
-											val.name.toLowerCase().includes(search.toLowerCase())
-										) {
-											return val;
-										}
-									})
-									.map((val) => {
-										return (
+							? menu.map((val) => {
+									return (
+										<Flex
+											flexDir={"row"}
+											justifyContent={"center"}
+											alignItems={"center"}
+											padding={"0px 16px"}
+											gap={"24px"}
+											w={"1168px"}
+											h={"46px"}
+											borderBottom={"1px solid rgba(53, 53, 53, 0.1)"}
+										>
 											<Flex
 												flexDir={"row"}
-												justifyContent={"center"}
+												justifyContent={"space-between"}
 												alignItems={"center"}
-												padding={"0px 16px"}
-												gap={"24px"}
-												w={"1168px"}
+												padding={"8px 0px"}
+												gap={"8px"}
+												w={"162.67px"}
 												h={"46px"}
-												borderBottom={"1px solid rgba(53, 53, 53, 0.1)"}
 											>
-												<Flex
-													flexDir={"row"}
-													justifyContent={"space-between"}
-													alignItems={"center"}
-													padding={"8px 0px"}
-													gap={"8px"}
-													w={"162.67px"}
-													h={"46px"}
-												>
-													<Flex gap={"8px"} alignItems={"center"}>
-														<Checkbox />
-														<Image
-															src={val.img_url}
-															w={"24px"}
-															h={"24px"}
-															borderRadius={"4px"}
-														/>
-														<Text>{val.name} </Text>
-													</Flex>
-												</Flex>
-												<Flex
-													flexDir={"row"}
-													justifyContent={"space-between"}
-													alignItems={"center"}
-													gap={"8px"}
-													w={"162.67px"}
-													h={"46px"}
-												>
-													<Flex gap={"5px"} alignItems={"center"}>
-														<Text>Grand Batam Mall</Text>
-													</Flex>
-												</Flex>
-												<Flex
-													flexDir={"row"}
-													justifyContent={"space-between"}
-													alignItems={"center"}
-													gap={"8px"}
-													w={"162.67px"}
-													h={"46px"}
-												>
-													<Flex gap={"5px"} alignItems={"center"}>
-														<Text>CAK021</Text>
-													</Flex>
-												</Flex>
-												<Flex
-													flexDir={"row"}
-													justifyContent={"space-between"}
-													alignItems={"center"}
-													gap={"8px"}
-													w={"162.67px"}
-													h={"46px"}
-												>
-													<Flex gap={"5px"} alignItems={"center"}>
-														<Text>{val.Category.category}</Text>
-													</Flex>
-												</Flex>
-												<Flex
-													flexDir={"row"}
-													justifyContent={"space-between"}
-													alignItems={"center"}
-													gap={"8px"}
-													w={"162.67px"}
-													h={"46px"}
-												>
-													<Flex gap={"5px"} alignItems={"center"}>
-														<Text>{val.price}</Text>
-													</Flex>
-												</Flex>
-												<Flex
-													flexDir={"row"}
-													justifyContent={"space-between"}
-													alignItems={"center"}
-													gap={"8px"}
-													w={"162.67px"}
-													h={"46px"}
-												>
-													<Flex gap={"5px"} alignItems={"center"}>
-														<Text
-															color={"#45BB71"}
-															fontFamily={"Roboto"}
-															fontStyle={"normal"}
-															fontWeight={"500"}
-															fontSize={"12px"}
-															lineHeight={"14px"}
-														>
-															Published
-														</Text>
-													</Flex>
-												</Flex>
-												<Menu>
-													<MenuButton
-														as={BiDotsHorizontalRounded}
-														w={"16px"}
-														h={"48px"}
-														cursor={"pointer"}
+												<Flex gap={"8px"} alignItems={"center"}>
+													<Checkbox />
+													<Image
+														src={val.img_url}
+														w={"24px"}
+														h={"24px"}
+														borderRadius={"4px"}
 													/>
-													<MenuList>
-														<MenuItem>Publish</MenuItem>
-														<MenuItem
-															onClick={() => {
-																onOpen();
-																setKobel(true);
-															}}
-														>
-															Edit
-														</MenuItem>
-														<Modal isOpen={isOpen} onClose={onClose}>
-															<ModalOverlay />
-															<ModalContent>
-																{kobel ? (
-																	<EditProduct
-																		onClose={onClose}
-																		id={val.id}
-																		getAll={getAll}
-																	/>
-																) : null}
-															</ModalContent>
-														</Modal>
-														<MenuItem
-															onClick={() => {
-																onOpen();
-																setKobel(false);
-															}}
-														>
-															Remove
-														</MenuItem>
-														{!kobel ? (
-															<>
-																<Modal isOpen={isOpen} onClose={onClose}>
-																	<ModalOverlay />
-																	<ModalContent>
-																		<ModalHeader>Remove Item</ModalHeader>
-																		<ModalCloseButton />
-																		<ModalBody>
-																			Deleting the
-																			{` ${val.name} `}
-																			will permanently remove it from the list
-																			and cannot be undone.
-																		</ModalBody>
-
-																		<ModalFooter>
-																			<Button
-																				w={"50%"}
-																				bgColor={"white"}
-																				border={"1px"}
-																				mr={3}
-																				onClick={onClose}
-																			>
-																				Close
-																			</Button>
-																			<Button
-																				w={"50%"}
-																				bgColor={"#D0011C	"}
-																				color={"white"}
-																				onClick={() => {
-																					deleteMenu(val);
-																				}}
-																			>
-																				Remove
-																			</Button>
-																		</ModalFooter>
-																	</ModalContent>
-																</Modal>
-															</>
-														) : null}
-													</MenuList>
-												</Menu>
+													<Text>{val.name} </Text>
+												</Flex>
 											</Flex>
-										);
-									})
+											<Flex
+												flexDir={"row"}
+												justifyContent={"space-between"}
+												alignItems={"center"}
+												gap={"8px"}
+												w={"162.67px"}
+												h={"46px"}
+											>
+												<Flex gap={"5px"} alignItems={"center"}>
+													<Text>Grand Batam Mall</Text>
+												</Flex>
+											</Flex>
+											<Flex
+												flexDir={"row"}
+												justifyContent={"space-between"}
+												alignItems={"center"}
+												gap={"8px"}
+												w={"162.67px"}
+												h={"46px"}
+											>
+												<Flex gap={"5px"} alignItems={"center"}>
+													<Text>CAK021</Text>
+												</Flex>
+											</Flex>
+											<Flex
+												flexDir={"row"}
+												justifyContent={"space-between"}
+												alignItems={"center"}
+												gap={"8px"}
+												w={"162.67px"}
+												h={"46px"}
+											>
+												<Flex gap={"5px"} alignItems={"center"}>
+													<Text>{val.Category.category}</Text>
+												</Flex>
+											</Flex>
+											<Flex
+												flexDir={"row"}
+												justifyContent={"space-between"}
+												alignItems={"center"}
+												gap={"8px"}
+												w={"162.67px"}
+												h={"46px"}
+											>
+												<Flex gap={"5px"} alignItems={"center"}>
+													<Text>{val.price}</Text>
+												</Flex>
+											</Flex>
+											<Flex
+												flexDir={"row"}
+												justifyContent={"space-between"}
+												alignItems={"center"}
+												gap={"8px"}
+												w={"162.67px"}
+												h={"46px"}
+											>
+												<Flex gap={"5px"} alignItems={"center"}>
+													<Text
+														color={"#45BB71"}
+														fontFamily={"Roboto"}
+														fontStyle={"normal"}
+														fontWeight={"500"}
+														fontSize={"12px"}
+														lineHeight={"14px"}
+													>
+														Published
+													</Text>
+												</Flex>
+											</Flex>
+											<Menu>
+												<MenuButton
+													as={BiDotsHorizontalRounded}
+													w={"16px"}
+													h={"48px"}
+													cursor={"pointer"}
+												/>
+												<MenuList>
+													<MenuItem>Publish</MenuItem>
+													<MenuItem
+														onClick={() => {
+															onOpen();
+															setKobel(true);
+														}}
+													>
+														Edit
+													</MenuItem>
+													<Modal isOpen={isOpen} onClose={onClose}>
+														<ModalOverlay />
+														<ModalContent>
+															{kobel ? (
+																<EditProduct
+																	onClose={onClose}
+																	id={val.id}
+																	getAll={getAll}
+																/>
+															) : null}
+														</ModalContent>
+													</Modal>
+													<MenuItem
+														onClick={() => {
+															onOpen();
+															setKobel(false);
+														}}
+													>
+														Remove
+													</MenuItem>
+													{!kobel ? (
+														<>
+															<Modal isOpen={isOpen} onClose={onClose}>
+																<ModalOverlay />
+																<ModalContent>
+																	<ModalHeader>Remove Item</ModalHeader>
+																	<ModalCloseButton />
+																	<ModalBody>
+																		Deleting the
+																		{` ${val.name} `}
+																		will permanently remove it from the list and
+																		cannot be undone.
+																	</ModalBody>
+
+																	<ModalFooter>
+																		<Button
+																			w={"50%"}
+																			bgColor={"white"}
+																			border={"1px"}
+																			mr={3}
+																			onClick={onClose}
+																		>
+																			Close
+																		</Button>
+																		<Button
+																			w={"50%"}
+																			bgColor={"#D0011C	"}
+																			color={"white"}
+																			onClick={() => {
+																				deleteMenu(val);
+																			}}
+																		>
+																			Remove
+																		</Button>
+																	</ModalFooter>
+																</ModalContent>
+															</Modal>
+														</>
+													) : null}
+												</MenuList>
+											</Menu>
+										</Flex>
+									);
+							  })
 							: null}
 					</Flex>
 					{/* pagination */}
@@ -597,7 +633,6 @@ export default function Product() {
 								h={"16px"}
 							>
 								Showing: 10 Results
-								<Icon as={MdKeyboardArrowDown} />
 							</Flex>
 							<Flex
 								fontFamily={"Roboto"}
@@ -609,7 +644,9 @@ export default function Product() {
 								alignItems={"center"}
 								h={"16px"}
 							>
-								Shown 1-2 from 2 page
+								{`Shown ${Math.ceil(shown.offset / 10) + 1} from ${
+									shown.totalPages || 1
+								}`}
 							</Flex>
 							<Flex
 								justifyContent={"center"}
@@ -622,17 +659,159 @@ export default function Product() {
 								fontSize={"12px"}
 								lineHeight={"14px"}
 							>
-								<Flex cursor={"pointer"} alignItems={"center"}>
+								<Flex
+									cursor={"pointer"}
+									alignItems={"center"}
+									onClick={() => {
+										if (Math.ceil(shown.offset / 10) + 1 > 1) {
+											setShown({ ...shown, offset: shown.offset - 10 });
+										}
+									}}
+								>
 									<Icon as={MdOutlineArrowBackIos} /> Back
 								</Flex>
 								<Flex flexDir={"row"} gap={"8px"}>
-									<Flex>1</Flex>
-									<Flex>2</Flex>
-									<Flex>3</Flex>
-									<Flex>4</Flex>
-									<Flex>...</Flex>
+									{pages.length <= 4 ? (
+										pages.map((val) => (
+											<Flex
+												cursor={"pointer"}
+												bgColor={
+													Math.ceil(shown.offset / 10) + 1 == val
+														? "green"
+														: "white"
+												}
+												color={
+													Math.ceil(shown.offset / 10) + 1 == val
+														? "white"
+														: "black"
+												}
+												borderRadius={"3px"}
+												w={"16px"}
+												h={"16px"}
+												justifyContent={"center"}
+												alignItems={"center"}
+												onClick={() =>
+													setShown({ ...shown, offset: (val - 1) * 10 })
+												}
+												key={val}
+											>
+												{val}
+											</Flex>
+										))
+									) : (
+										<>
+											{Math.ceil(shown.offset / 10) + 1 < 4 && (
+												<>
+													{pages.slice(0, 4).map((val) => (
+														<Flex
+															cursor={"pointer"}
+															bgColor={
+																Math.ceil(shown.offset / 10) + 1 == val
+																	? "green"
+																	: "white"
+															}
+															color={
+																Math.ceil(shown.offset / 10) + 1 == val
+																	? "white"
+																	: "black"
+															}
+															borderRadius={"3px"}
+															w={"16px"}
+															h={"16px"}
+															justifyContent={"center"}
+															alignItems={"center"}
+															onClick={() =>
+																setShown({ ...shown, offset: (val - 1) * 10 })
+															}
+															key={val}
+														>
+															{val}
+														</Flex>
+													))}
+													<Flex>...</Flex>
+												</>
+											)}
+											{Math.ceil(shown.offset / 10) + 1 >= 4 &&
+												Math.ceil(shown.offset / 10) + 1 < pages.length - 4 && (
+													<>
+														<Flex>...</Flex>
+														{pages
+															.slice(shown.offset - 1, shown.offset + 3)
+															.map((val) => (
+																<Flex
+																	cursor={"pointer"}
+																	bgColor={
+																		Math.ceil(shown.offset / 10) + 1 == val
+																			? "green"
+																			: "white"
+																	}
+																	color={
+																		Math.ceil(shown.offset / 10) + 1 == val
+																			? "white"
+																			: "black"
+																	}
+																	borderRadius={"3px"}
+																	w={"16px"}
+																	h={"16px"}
+																	justifyContent={"center"}
+																	alignItems={"center"}
+																	onClick={() =>
+																		setShown({
+																			...shown,
+																			offset: (val - 1) * 10,
+																		})
+																	}
+																	key={val}
+																>
+																	{val}
+																</Flex>
+															))}
+														<Flex>...</Flex>
+													</>
+												)}
+											{Math.ceil(shown.offset / 10) + 1 >= pages.length - 4 && (
+												<>
+													<Flex>...</Flex>
+													{pages.slice(-4).map((val) => (
+														<Flex
+															cursor={"pointer"}
+															bgColor={
+																Math.ceil(shown.offset / 10) + 1 == val
+																	? "green"
+																	: "white"
+															}
+															color={
+																Math.ceil(shown.offset / 10) + 1 == val
+																	? "white"
+																	: "black"
+															}
+															borderRadius={"3px"}
+															w={"16px"}
+															h={"16px"}
+															justifyContent={"center"}
+															alignItems={"center"}
+															onClick={() =>
+																setShown({ ...shown, offset: (val - 1) * 10 })
+															}
+															key={val}
+														>
+															{val}
+														</Flex>
+													))}
+												</>
+											)}
+										</>
+									)}
 								</Flex>
-								<Flex cursor={"pointer"} alignItems={"center"}>
+								<Flex
+									cursor={"pointer"}
+									alignItems={"center"}
+									onClick={() => {
+										if (Math.ceil(shown.offset / 10) + 1 < shown.totalPages) {
+											setShown({ ...shown, offset: shown.offset + 10 });
+										}
+									}}
+								>
 									Next
 									<Icon as={MdOutlineArrowForwardIos} />
 								</Flex>
