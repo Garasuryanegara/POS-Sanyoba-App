@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const { nanoid } = require("nanoid");
 const moment = require("moment");
 const sharp = require("sharp");
+const users = require("../models/users");
 const url = process.env.url;
 const url_image = process.env.URL_IMAGE;
 
@@ -218,6 +219,59 @@ const userController = {
       });
     }
   },
+  getUserDraft: async (req, res) => {
+    try {
+      const { limit, offset, column, sort, search, role, active } = req.query;
+      const whereClause = {};
+      let totalCount;
+      let totalPages;
+      let orderClause;
+
+      if (search) {
+        whereClause.name = {
+          [Op.like]: `%${search}%`,
+        };
+      }
+      if (role) {
+        whereClause.role = role;
+      }
+
+      if (active == "true") {
+        whereClause.active = true;
+      } else if (active == "false") {
+        whereClause.active = false;
+      }
+
+      if (column) {
+        orderClause = [[column, sort]];
+      }
+
+      if (limit) {
+        totalCount = await db.User.count({
+          where: whereClause,
+        });
+        totalPages = Math.ceil(totalCount / limit);
+      }
+
+      const users = await db.User.findAll({
+        where: whereClause,
+        order: orderClause,
+        limit: limit ? Number(limit) : null,
+        offset: offset ? Number(offset) : null,
+      });
+      // console.log(menus);
+      res.send({
+        users: users,
+        totalPages: totalPages,
+        totalCount: totalCount,
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
   deleteUser: async (req, res) => {
     try {
       // console.log("asda");
@@ -226,6 +280,33 @@ const userController = {
           id: req.params.id,
         },
       });
+      return res.status(200).send({
+        message: "Employee berhasil dihapus",
+      });
+    } catch (error) {
+      res.status(500).send({
+        message: error.message,
+      });
+    }
+  },
+  activeUser: async (req, res) => {
+    try {
+      // console.log("asda");
+      const acti = await db.User.findOne({
+        where: {
+          id: req.params.id,
+        },
+      });
+      await db.User.update(
+        {
+          active: !acti.dataValues.active,
+        },
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      );
       return res.status(200).send({
         message: "Employee berhasil dihapus",
       });

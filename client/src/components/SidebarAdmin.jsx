@@ -183,6 +183,7 @@ export default function SidebarAdmin() {
                   cursor: "pointer",
                   background: "#DCFFE2",
                 }}
+                onClick={() => nav("/product")}
               >
                 <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
                   Product
