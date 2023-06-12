@@ -12,7 +12,7 @@ import { useState, useRef, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
 import { api } from "../api/api";
 
-export function EditProduct(props) {
+export function EditProduct({ getAll, onClose, id }) {
 	const [imgUrl, setImgUrl] = useState();
 	const [jembut, setJembut] = useState({
 		name: "",
@@ -58,10 +58,10 @@ export function EditProduct(props) {
 			return alert("product already exist");
 		} else {
 			console.log(product);
-			await api.patch("/menus/" + props.id, product).then((res) => {
+			await api.patch("/menus/" + id, product).then((res) => {
 				// alert("product edited");
-				props.onClose();
-				props.getAll();
+				onClose();
+				getAll();
 			});
 		}
 	}
@@ -113,14 +113,11 @@ export function EditProduct(props) {
 							as={IoMdClose}
 							color="black"
 							cursor={"pointer"}
-							onClick={() => props.onClose()}
+							onClick={() => onClose()}
 						></Icon>
 					</Flex>
 				</Flex>
-				<Flex
-					padding={"0px 24px 24px 24px"}
-					justifyContent={"space-between"}
-				>
+				<Flex padding={"0px 24px 24px 24px"} justifyContent={"space-between"}>
 					<Flex flexDir={"column"} gap="10px">
 						<Image w={"180px"} h="180px" src={imgUrl}></Image>
 						<Input
