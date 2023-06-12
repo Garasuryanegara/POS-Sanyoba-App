@@ -14,6 +14,6 @@ router.post(
 
 router.post("/login", userController.login);
 router.get("/token", userController.getByToken, userController.getUserByToken);
-router.delete("/:id", userController.deleteUser);
+// router.delete("/:id", userController.deleteUser);
 
 module.exports = router;

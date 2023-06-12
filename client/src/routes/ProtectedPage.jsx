@@ -60,7 +60,11 @@ export default function ProtectedPage({
   }, []);
 
   useEffect(() => {
-    setIsLoading(false);
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(setIsLoading(false));
+      }, 1000);
+    });
   }, [userSelector]);
 
   return (

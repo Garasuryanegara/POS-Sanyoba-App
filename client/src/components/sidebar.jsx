@@ -1,6 +1,8 @@
 import { Box, Center, Flex, Avatar, Button } from "@chakra-ui/react";
 import { TbSelect } from "react-icons/tb";
+import { useSelector } from "react-redux";
 export default function Sidebar() {
+  const userSelector = useSelector((state) => state.auth);
   return (
     <Flex
       width="272px"
@@ -26,8 +28,8 @@ export default function Sidebar() {
       </Center>
 
       <Center flexDir="column" justifyContent="start" padding="10px">
-        <Avatar></Avatar>
-        <Box padding="10px">Bang Messi</Box>
+        <Avatar src={userSelector.img_url}></Avatar>
+        <Box padding="10px">{userSelector.name}</Box>
 
         <Box paddingBottom="20px">(Cashier)</Box>
 

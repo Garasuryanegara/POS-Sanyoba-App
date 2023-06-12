@@ -132,7 +132,9 @@ export default function MenuDash() {
             Total Sales <Icon as={MdKeyboardArrowRight} />
           </Flex>
           <Box height={"30%"} fontWeight={"600"} fontSize={"16px"}>
-            {sumOrder ? `Rp  ${sumOrder?.toLocaleString("id-ID")}` : "-"}
+            {sumOrder
+              ? `Rp  ${(sumOrder * 1000)?.toLocaleString("id-ID")}`
+              : "-"}
           </Box>
           <Flex
             height={"30%"}

@@ -26,6 +26,7 @@ import { ModalSelectQty } from "./Modal";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { api } from "../api/api";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function ContentCashier() {
   // console.log(category);
@@ -36,6 +37,7 @@ export default function ContentCashier() {
   const [cont, setCont] = useState(9);
   const [mmk, setMmk] = useState();
   const [isClicked, setIsClicked] = useState();
+  const userSelector = useSelector((state) => state.auth);
   const nav = useNavigate();
 
   const handleObjectValue = async (val) => {
@@ -107,7 +109,7 @@ export default function ContentCashier() {
   //post new order
 
   const postOrder = async (req, res) => {
-    const total = { total: totalPrice };
+    const total = { total: totalPrice, user_id: userSelector.id };
     const hasil = await api.post("/orders", total).then((result) => {
       localStorage.setItem("order_id", JSON.stringify(result.data.id));
       orderList.map(async (val) => {

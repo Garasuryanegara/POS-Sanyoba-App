@@ -5,9 +5,10 @@ const moment = require("moment");
 const orderControllers = {
   insert: async (req, res) => {
     try {
-      const { total } = req.body;
+      const { total, user_id } = req.body;
       await db.Order.create({
         total,
+        user_id,
       }).then((result) => res.send(result));
     } catch (err) {
       return res.status(500).send({
