@@ -43,19 +43,8 @@ export default function Employee() {
   const [kobel, setKobel] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [search, setSearch] = useState("");
-  const [categoryList, setCategoryList] = useState([]);
   const [filter, setFilter] = useState({});
   const [sort, setSort] = useState({});
-
-  useEffect(() => {
-    categoryId();
-  }, []);
-
-  const categoryId = async () => {
-    await api.get("/categories", categoryList).then((res) => {
-      setCategoryList(res.data);
-    });
-  };
 
   useEffect(() => {
     getAll();
@@ -65,9 +54,7 @@ export default function Employee() {
     await api.delete("/menus/" + val.id);
     getAll();
   }
-  // useEffect(() => {
-  // 	if (category_id) getAll(categoryId);
-  // }, [category_id]);
+
   useEffect(() => {
     if (filter) {
       getAll();
@@ -100,12 +87,12 @@ export default function Employee() {
 
   async function getAll() {
     await api
-      .get("/menus/Draft", {
+      .get("/users", {
         params: filter,
       })
       .then((res) => {
-        console.log(res.data.menus);
-        setMenu(res.data.menus);
+        console.log(res.data.Users);
+        setMenu(res.data.Users);
       });
   }
 
@@ -157,29 +144,7 @@ export default function Employee() {
             borderRadius={"8px"}
             placeholder="All Outlets"
           />
-          <Select
-            fontStyle={"normal"}
-            fontWeight={"500"}
-            fontSize={"12px"}
-            lineHeight={"14px"}
-            className="select"
-            boxSizing="border-box"
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-            gap={"202px"}
-            w={"266px"}
-            h={"32px"}
-            border={"1px solid rgba(53, 53, 53, 0.3)"}
-            borderRadius={"8px"}
-            placeholder="All Type of Category"
-            id="category_id"
-            onChange={valueHandler}
-          >
-            {categoryList.map((val) => (
-              <option value={val.id}>{val.category}</option>
-            ))}
-          </Select>
+
           <Select
             fontStyle={"normal"}
             fontWeight={"500"}
@@ -197,7 +162,13 @@ export default function Employee() {
             border={"1px solid rgba(53, 53, 53, 0.3)"}
             borderRadius={"8px"}
             placeholder="All Status"
-          />
+            onChange={(e) => {
+              // console.log(e.target.name);
+            }}
+          >
+            <option value="active">active</option>
+            <option value="inactive">inactive</option>
+          </Select>
           <InputGroup w={"266px"} h={"32px"} gap={"202px"}>
             <InputLeftElement h={"32px"}>
               <Icon as={RxMagnifyingGlass} w={"15px"} h={"15px"} />
@@ -296,8 +267,25 @@ export default function Employee() {
                 h={"46px"}
               >
                 <Flex gap={"5px"} alignItems={"center"}>
+                  <Text>Role</Text>
+                </Flex>
+                <Flex flexDir={"column"}>
+                  <Icon cursor={"pointer"} as={MdArrowDropUp} />
+                  <Icon cursor={"pointer"} as={MdArrowDropDown} />
+                </Flex>
+              </Flex>
+              <Flex
+                flexDir={"row"}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+                gap={"8px"}
+                w={"162.67px"}
+                h={"46px"}
+              >
+                <Flex gap={"5px"} alignItems={"center"}>
                   <Text>Outlet</Text>
                 </Flex>
+
                 <Flex flexDir={"column"}>
                   <Icon cursor={"pointer"} as={MdArrowDropUp} />
                   <Icon cursor={"pointer"} as={MdArrowDropDown} />
@@ -312,7 +300,7 @@ export default function Employee() {
                 h={"46px"}
               >
                 <Flex gap={"5px"} alignItems={"center"}>
-                  <Text>SKU (Stock Keeping Unit)</Text>
+                  <Text>Phone</Text>
                 </Flex>
 
                 <Flex flexDir={"column"}>
@@ -329,24 +317,7 @@ export default function Employee() {
                 h={"46px"}
               >
                 <Flex gap={"5px"} alignItems={"center"}>
-                  <Text>Category</Text>
-                </Flex>
-
-                <Flex flexDir={"column"}>
-                  <Icon cursor={"pointer"} as={MdArrowDropUp} />
-                  <Icon cursor={"pointer"} as={MdArrowDropDown} />
-                </Flex>
-              </Flex>
-              <Flex
-                flexDir={"row"}
-                justifyContent={"space-between"}
-                alignItems={"center"}
-                gap={"8px"}
-                w={"162.67px"}
-                h={"46px"}
-              >
-                <Flex gap={"5px"} alignItems={"center"}>
-                  <Text>Sales Price Per Item</Text>
+                  <Text>Password</Text>
                 </Flex>
                 <Flex flexDir={"column"}>
                   <Icon cursor={"pointer"} as={MdArrowDropUp} />
@@ -424,6 +395,7 @@ export default function Employee() {
                           h={"46px"}
                         >
                           <Flex gap={"5px"} alignItems={"center"}>
+                            <Text>{val.role}</Text>
                             <Text>Grand Batam Mall</Text>
                           </Flex>
                         </Flex>
@@ -436,7 +408,7 @@ export default function Employee() {
                           h={"46px"}
                         >
                           <Flex gap={"5px"} alignItems={"center"}>
-                            <Text>CAK021</Text>
+                            <Text>Grand Batam Mall</Text>
                           </Flex>
                         </Flex>
                         <Flex
@@ -448,7 +420,7 @@ export default function Employee() {
                           h={"46px"}
                         >
                           <Flex gap={"5px"} alignItems={"center"}>
-                            <Text>{val.Category.category}</Text>
+                            <Text>{val.phone}</Text>
                           </Flex>
                         </Flex>
                         <Flex
@@ -460,7 +432,7 @@ export default function Employee() {
                           h={"46px"}
                         >
                           <Flex gap={"5px"} alignItems={"center"}>
-                            <Text>{val.price}</Text>
+                            <Text>should be PIN</Text>
                           </Flex>
                         </Flex>
                         <Flex
@@ -480,7 +452,11 @@ export default function Employee() {
                               fontSize={"12px"}
                               lineHeight={"14px"}
                             >
-                              Published
+                              {val.active ? (
+                                <span style={{ color: "#45BB71" }}>Active</span>
+                              ) : (
+                                <span style={{ color: "red" }}>Inactive</span>
+                              )}
                             </Text>
                           </Flex>
                         </Flex>

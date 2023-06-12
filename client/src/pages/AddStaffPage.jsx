@@ -13,7 +13,9 @@ export default function AddStaffPage() {
             <SidebarAdmin></SidebarAdmin>
             <Box>
               <ProfileAdmin />
-              <AddStaff />
+              <Box>
+                <AddStaff />
+              </Box>
             </Box>
           </Box>
         </Container>
