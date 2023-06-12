@@ -7,7 +7,11 @@ import AddStaff from "../components/addStaff";
 export default function AddStaffPage() {
   return (
     <>
-      <Box backgroundColor={"#F1F1F1"} height={"100vh"} width={"100vw"}>
+      <Box
+        backgroundColor={"#F1F1F1"}
+        //  height={"100vh"}
+        //  width={"100vw"}
+      >
         <Container maxW={"1440px"}>
           <Box display={"flex"}>
             <SidebarAdmin></SidebarAdmin>
