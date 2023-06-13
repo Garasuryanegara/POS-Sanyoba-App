@@ -27,7 +27,6 @@ const routes = [
       </ProtectedPage>
     }
   ></Route>,
-
   <Route
     path="/login"
     element={
@@ -45,12 +44,38 @@ const routes = [
       </ProtectedPage>
     }
   ></Route>,
-  <Route path="/addproduct" element={<AddProductPage />} />,
-  // <Route path="/staff" element={<AddStaffPage />} />,
-  <Route path="/product" element={<ProductPage />} />,
-
-  <Route path="/emp" element={<AddEmployeePage />} />,
-  <Route path="/trx-detail" element={<TransactionDetailPage />}></Route>,
+  <Route
+    path="/addproduct"
+    element={
+      <ProtectedPage needLogin={true} adminOnly={true}>
+        <AddProductPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+  <Route
+    path="/product"
+    element={
+      <ProtectedPage needLogin={true} adminOnly={true}>
+        <ProductPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+  <Route
+    path="/emp"
+    element={
+      <ProtectedPage needLogin={true} adminOnly={true}>
+        <AddEmployeePage />
+      </ProtectedPage>
+    }
+  ></Route>,
+  <Route
+    path="/trx-detail"
+    element={
+      <ProtectedPage needLogin={true}>
+        <TransactionDetailPage />
+      </ProtectedPage>
+    }
+  ></Route>,
 ];
 
 export default routes;

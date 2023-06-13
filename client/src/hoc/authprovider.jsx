@@ -13,7 +13,7 @@ export default function AuthProvider({ children }) {
           authorization: `Bearer ${token}`,
         },
       });
-      console.log(id.data.id);
+      console.log(id);
       await api
         .get("/users", {
           params: {
@@ -24,7 +24,7 @@ export default function AuthProvider({ children }) {
           console.log(res.data.Users);
           dispatch({
             type: "login",
-            payload: res.data.Users,
+            payload: res.data.Users[0],
           });
         });
     }

@@ -125,6 +125,7 @@ const userController = {
   },
   getUserByToken: async (req, res) => {
     console.log("masuk sini juga");
+    console.log(req.user);
     res.send(req.user);
   },
   uploadAvatar: async (req, res) => {
@@ -164,7 +165,7 @@ const userController = {
         address,
         password: hashPassword,
         role,
-        img_url: process.env.url_img + filename,
+        img_url: process.env.staff_img + filename,
       }).then((result) => res.send(result));
       // await db.User.findAll().then((result) => {
       // res.send(result);

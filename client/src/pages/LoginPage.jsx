@@ -51,11 +51,11 @@ export default function LoginPage() {
           throw "error";
         }
         localStorage.setItem("auth", JSON.stringify(res.data.token));
-
-        // dispatch({
-        //   type: "login",
-        //   payload: res.data.value,
-        // });
+        console.log(res);
+        dispatch({
+          type: "login",
+          payload: res.data.value,
+        });
         console.log(res.data.value.role);
         if (res.data.value.role == "admin") {
           return nav("/adminLand");
