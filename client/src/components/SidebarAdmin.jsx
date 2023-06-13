@@ -1,10 +1,11 @@
 import { Flex, Box, Center } from "@chakra-ui/react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 export default function SidebarAdmin() {
   const [check1, setCheck1] = useState(false);
   const [check2, setCheck2] = useState(false);
   const [check3, setCheck3] = useState(false);
-
+  const nav = useNavigate();
   try {
     return (
       <Box
@@ -68,6 +69,7 @@ export default function SidebarAdmin() {
               cursor: "pointer",
             }}
             fontWeight={"bold"}
+            onClick={() => nav("/adminland")}
           >
             <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
               Dashboard
@@ -181,6 +183,7 @@ export default function SidebarAdmin() {
                   cursor: "pointer",
                   background: "#DCFFE2",
                 }}
+                onClick={() => nav("/product")}
               >
                 <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
                   Product
@@ -245,6 +248,7 @@ export default function SidebarAdmin() {
                   cursor: "pointer",
                   background: "#DCFFE2",
                 }}
+                onClick={() => nav("/emp")}
               >
                 <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
                   Employee

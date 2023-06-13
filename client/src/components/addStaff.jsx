@@ -110,11 +110,11 @@ export default function AddStaff() {
         alignItems={"flex-start"}
         padding={"16px"}
         gap={"32px"}
-        position={"absolute"}
-        w={"1168px"}
-        h={"1051px"}
-        left={"248"}
-        top={"178px"}
+        position={"relative"}
+        // w={"1168px"}
+        // h={"1051px"}
+        // left={"248"}
+        // top={"178px"}
         borderRadius={"8px"}
         fontFamily={"Roboto"}
         fontStyle={"normal"}

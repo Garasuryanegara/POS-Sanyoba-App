@@ -14,7 +14,7 @@ function userReducer(state = init, action) {
       // avatar_url: action.payload.avatar_url,
       // role: action.payload.role,
       // active: action.payload.active,
-      ...action.payload[0],
+      ...action.payload,
     };
   } else if (action.type == "logout") {
     return init;
