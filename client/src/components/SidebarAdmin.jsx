@@ -1,5 +1,6 @@
-import { Flex, Box, Center } from "@chakra-ui/react";
+import { Flex, Box, Center, Icon } from "@chakra-ui/react";
 import { useState } from "react";
+import { MdArrowDropDown } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 export default function SidebarAdmin() {
   const [check1, setCheck1] = useState(false);
@@ -11,9 +12,13 @@ export default function SidebarAdmin() {
       <Box
         left={0}
         top={0}
-        //  position={"absolute"}
         zIndex={5}
-        // height={"100vh"}
+        height={"100vh"}
+        fontFamily={"Roboto"}
+        fontStyle={"normal"}
+        fontWeight={"400"}
+        fontSize={"12px"}
+        lineHeight={"14px"}
       >
         <Box
           width={"224px"}
@@ -71,7 +76,7 @@ export default function SidebarAdmin() {
             fontWeight={"bold"}
             onClick={() => nav("/adminland")}
           >
-            <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
+            <Flex height={"100%"} alignItems={"center"} padding={"12px 24px"}>
               Dashboard
             </Flex>
           </Box>
@@ -81,10 +86,14 @@ export default function SidebarAdmin() {
             fontWeight={"bold"}
             _hover={{ cursor: "pointer", background: "#DCFFE2" }}
             onClick={() => setCheck1(!check1)}
+            display={"flex"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
           >
-            <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
+            <Flex height={"100%"} alignItems={"center"} padding={"12px 24px"}>
               Report
             </Flex>
+            <Icon as={MdArrowDropDown} marginRight={"12px"} fontSize={"16px"} />
           </Box>
           {check1 ? (
             <>
@@ -96,7 +105,11 @@ export default function SidebarAdmin() {
                   background: "#DCFFE2",
                 }}
               >
-                <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
+                <Flex
+                  height={"100%"}
+                  alignItems={"center"}
+                  padding={"12px 24px"}
+                >
                   Sales Transaction Data
                 </Flex>
               </Box>
@@ -108,7 +121,11 @@ export default function SidebarAdmin() {
                   background: "#DCFFE2",
                 }}
               >
-                <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
+                <Flex
+                  height={"100%"}
+                  alignItems={"center"}
+                  padding={"12px 24px"}
+                >
                   Sales Product
                 </Flex>
               </Box>
@@ -120,7 +137,11 @@ export default function SidebarAdmin() {
                   background: "#DCFFE2",
                 }}
               >
-                <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
+                <Flex
+                  height={"100%"}
+                  alignItems={"center"}
+                  padding={"12px 24px"}
+                >
                   Daily Sales Report
                 </Flex>
               </Box>
@@ -132,7 +153,11 @@ export default function SidebarAdmin() {
                   background: "#DCFFE2",
                 }}
               >
-                <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
+                <Flex
+                  height={"100%"}
+                  alignItems={"center"}
+                  padding={"12px 24px"}
+                >
                   Sales Per Outlet
                 </Flex>
               </Box>
@@ -144,7 +169,11 @@ export default function SidebarAdmin() {
                   background: "#DCFFE2",
                 }}
               >
-                <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
+                <Flex
+                  height={"100%"}
+                  alignItems={"center"}
+                  padding={"12px 24px"}
+                >
                   Sales Per Category
                 </Flex>
               </Box>
@@ -156,7 +185,11 @@ export default function SidebarAdmin() {
                   background: "#DCFFE2",
                 }}
               >
-                <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
+                <Flex
+                  height={"100%"}
+                  alignItems={"center"}
+                  padding={"12px 24px"}
+                >
                   Sales Per Custommer
                 </Flex>
               </Box>
@@ -169,10 +202,14 @@ export default function SidebarAdmin() {
             fontWeight={"bold"}
             _hover={{ cursor: "pointer", background: "#DCFFE2" }}
             onClick={() => setCheck2(!check2)}
+            display={"flex"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
           >
-            <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
+            <Flex height={"100%"} alignItems={"center"} padding={"12px 24px"}>
               Goods Detail
             </Flex>
+            <Icon as={MdArrowDropDown} marginRight={"12px"} fontSize={"16px"} />
           </Box>
           {check2 ? (
             <>
@@ -185,7 +222,11 @@ export default function SidebarAdmin() {
                 }}
                 onClick={() => nav("/product")}
               >
-                <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
+                <Flex
+                  height={"100%"}
+                  alignItems={"center"}
+                  padding={"12px 24px"}
+                >
                   Product
                 </Flex>
               </Box>
@@ -197,7 +238,11 @@ export default function SidebarAdmin() {
                   background: "#DCFFE2",
                 }}
               >
-                <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
+                <Flex
+                  height={"100%"}
+                  alignItems={"center"}
+                  padding={"12px 24px"}
+                >
                   Inventory
                 </Flex>
               </Box>
@@ -209,7 +254,11 @@ export default function SidebarAdmin() {
                   background: "#DCFFE2",
                 }}
               >
-                <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
+                <Flex
+                  height={"100%"}
+                  alignItems={"center"}
+                  padding={"12px 24px"}
+                >
                   Procurement
                 </Flex>
               </Box>
@@ -222,10 +271,14 @@ export default function SidebarAdmin() {
             fontWeight={"bold"}
             _hover={{ cursor: "pointer", background: "#DCFFE2" }}
             onClick={() => setCheck3(!check3)}
+            display={"flex"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
           >
-            <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
+            <Flex height={"100%"} alignItems={"center"} padding={"12px 24px"}>
               Management
             </Flex>
+            <Icon as={MdArrowDropDown} marginRight={"12px"} fontSize={"16px"} />
           </Box>
           {check3 ? (
             <>
@@ -237,7 +290,11 @@ export default function SidebarAdmin() {
                   background: "#DCFFE2",
                 }}
               >
-                <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
+                <Flex
+                  height={"100%"}
+                  alignItems={"center"}
+                  padding={"12px 24px"}
+                >
                   Outlet
                 </Flex>
               </Box>
@@ -250,7 +307,11 @@ export default function SidebarAdmin() {
                 }}
                 onClick={() => nav("/emp")}
               >
-                <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
+                <Flex
+                  height={"100%"}
+                  alignItems={"center"}
+                  padding={"12px 24px"}
+                >
                   Employee
                 </Flex>
               </Box>
@@ -262,7 +323,11 @@ export default function SidebarAdmin() {
                   background: "#DCFFE2",
                 }}
               >
-                <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
+                <Flex
+                  height={"100%"}
+                  alignItems={"center"}
+                  padding={"12px 24px"}
+                >
                   Customer
                 </Flex>
               </Box>
@@ -274,7 +339,11 @@ export default function SidebarAdmin() {
                   background: "#DCFFE2",
                 }}
               >
-                <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
+                <Flex
+                  height={"100%"}
+                  alignItems={"center"}
+                  padding={"12px 24px"}
+                >
                   Comission
                 </Flex>
               </Box>
@@ -291,7 +360,7 @@ export default function SidebarAdmin() {
               cursor: "pointer",
             }}
           >
-            <Flex height={"100%"} alignItems={"center"} padding={"0 5px"}>
+            <Flex height={"100%"} alignItems={"center"} padding={"12px 24px"}>
               Settings
             </Flex>
           </Box>

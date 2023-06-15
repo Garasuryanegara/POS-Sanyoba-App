@@ -1,7 +1,7 @@
 import { Box, Center, Container } from "@chakra-ui/react";
 import SidebarAdmin from "../components/SidebarAdmin";
-import ProfileAdmin from "../components/ProfileAdmin";
 import Employee from "../components/employee";
+import ProfileAdmin2 from "../components/ProfileAdmin2";
 
 export default function AddEmployeePage() {
   return (
@@ -11,7 +11,7 @@ export default function AddEmployeePage() {
           <Box display={"flex"}>
             <SidebarAdmin></SidebarAdmin>
             <Box width={"100%"}>
-              <ProfileAdmin />
+              <ProfileAdmin2 />
               <Employee />
             </Box>
           </Box>
